@@ -1,0 +1,58 @@
+/* --- GLOBAL SECTION CONTAINER --- */
+.team-section-clean {
+    padding: 6rem 0;
+    background-color: #121212; 
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+}
+
+.team-container-clean {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem; 
+}
+
+/* --- HEADER STYLING --- */
+.team-header-clean {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.team-title-clean {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #00ADB5; 
+    text-transform: uppercase;
+}
+
+.team-subtitle-clean {
+    display: block;
+    font-size: 1rem;
+    color: #A9A9A9;
+    font-weight: 300;
+}
+
+.cta-button-container {
+    text-align: center;
+}
+
+.cta-team-button {
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: #00ADB5; 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.cta-team-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}

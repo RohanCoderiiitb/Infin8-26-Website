@@ -1,34 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React,{lazy,Suspense} from 'react'
+import {Routes,Route,BrowserRouter} from "react-router-dom";
+
+const EventPage = lazy(()=>import("./events/EventPage"));
+const TeamsPage = lazy(()=>import("./team/TeamPage"));
+const HomePage  = lazy(()=>import("./home/HomePage"));
+const SponsorsPage = lazy(()=>import("./sponsors/SponsorPage"));
+
+function LoadingPage(){
+  return(
+       <div style={{height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A0A0F', color: 'white'}}>
+      <h1>Page under progress...</h1>
+      <h2>Loading...</h2>
+    </div>
+  );
+}
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingPage/>}>
+          <Routes>
+            <Route path="/" element={<HomePage/>}></Route>
+            <Route path="/events" element={<EventPage/>}></Route>
+            <Route path="/teams" element={<TeamsPage/>}></Route>
+            <Route path="/sponsors" element={<SponsorsPage/>}></Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
   )
 }
 
