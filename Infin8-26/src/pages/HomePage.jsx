@@ -1,5 +1,4 @@
 import React from "react";
-import "../App.css";
 import FaqSection from "../components/FaqSection";
 import Footer from "../components/Footer";
 import TeamSection from "../components/Team";

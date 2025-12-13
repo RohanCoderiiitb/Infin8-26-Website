@@ -1,26 +1,16 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
-const EventPage = lazy(() => import("./pages/EventPage"));
+const EventPage = lazy(() => import("./pages/Events/EventPage"));
 const TeamsPage = lazy(() => import("./pages/Teams/TeamPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const SponsorsPage = lazy(() => import("./pages/SponsorPage"));
 
 function LoadingPage() {
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#0A0A0F",
-        color: "white",
-      }}
-    >
-      <h1>Page under progress...</h1>
-      <h2>Loading...</h2>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[#0A0A0F] text-white">
+      <h1 className="text-3xl font-black">Page under progress...</h1>
+      <h2 className="text-xl mt-2">Loading...</h2>
     </div>
   );
 }
@@ -31,8 +21,8 @@ function App() {
       <Suspense fallback={<LoadingPage />}>
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
-          <Route path="/events" element={<EventPage />}></Route>
-          <Route path="/teams" element={<TeamsPage />}></Route>
+          <Route path="/Events" element={<EventPage />}></Route>
+          <Route path="/Teams" element={<TeamsPage />}></Route>
           <Route path="/sponsors" element={<SponsorsPage />}></Route>
         </Routes>
       </Suspense>

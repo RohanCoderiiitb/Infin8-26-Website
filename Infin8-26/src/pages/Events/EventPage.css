@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&display=swap");
+
+.events-page {
+  background-image: var(--events-bg);
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 1440px auto;
+
+  background-color: #bff2f4;
+  font-family: "Lora", serif;
+}
+
+@media (max-width: 1440px) {
+  .events-page {
+    background-size: 100% auto;
+  }
+}
+
+.events-title {
+  text-shadow: 0 6px 20px rgba(0, 40, 70, 0.45),
+    0 0 30px rgba(120, 220, 255, 0.35);
+}
+
+.events-timeline {
+  position: relative;
+}
+
+.events-timeline-svg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  height: 40px;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.events-timeline-line--base {
+  stroke: rgba(7, 50, 74, 0.35);
+  stroke-width: 8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 6px 18px rgba(0, 30, 55, 0.22));
+}
+
+.events-timeline-line--progress {
+  stroke: rgba(7, 50, 74, 0.92);
+  stroke-width: 8;
+  stroke-linecap: round;
+
+  stroke-dasharray: 40 18;
+  animation: events-progress-sheen 1.7s linear infinite;
+
+  transition: all 280ms ease;
+
+  filter: drop-shadow(0 6px 18px rgba(0, 30, 55, 0.25));
+}
+
+@keyframes events-progress-sheen {
+  to {
+    stroke-dashoffset: -116;
+  }
+}
+
+.events-node {
+  position: relative;
+  z-index: 1;
+  border: 2px solid rgba(7, 50, 74, 0.35);
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
+}
+
+.events-node--active {
+  border-color: rgba(7, 50, 74, 0.8);
+  background: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 0 3px rgba(7, 50, 74, 0.12), 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+
+.events-day-label {
+  color: rgba(7, 50, 74, 0.92);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 10px 22px rgba(0, 40, 70, 0.15);
+}
+
+.days-scroller::-webkit-scrollbar {
+  display: none;
+}
+.days-scroller {
+  scrollbar-width: none;
+}
+.day-slide {
+  scroll-snap-stop: always;
+}
