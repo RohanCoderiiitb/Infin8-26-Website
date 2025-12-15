@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import FaqSection from "../../components/FaqSection/FaqSection";
 import { Mail, Phone, Linkedin, Smartphone } from "lucide-react";
 import "./HomePage.css";
+import CountDownTimer from "./CountDownTimer";
 
 export default function HomePage() {
   const [open, setOpen] = useState(false);
@@ -59,6 +60,13 @@ export default function HomePage() {
             </motion.aside>
           )}
         </AnimatePresence>
+
+        <div class="timer-loc">
+          <h2 class="theme">UNDER THE SEA</h2>
+          <h3 class="comingsoon">COMING SOON</h3>
+          <CountDownTimer/>
+        </div>
+
       </section>
 
       <section className="events-section">
