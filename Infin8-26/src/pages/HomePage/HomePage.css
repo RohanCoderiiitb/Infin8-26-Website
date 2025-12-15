@@ -1,0 +1,153 @@
+.home-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.hero-section {
+  position: relative;
+  height: 100vh;
+  background-color: #bff2f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: black;
+}
+
+.hamburger-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background: linear-gradient(to bottom, #0f172a, #020617);
+  z-index: 30;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+}
+
+.sidebar-nav {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+}
+
+.events-section {
+  background-color: #c81d25;
+  padding: 6rem 2rem;
+  color: white;
+}
+
+.events-content {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.section-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  margin-bottom: 1.5rem;
+}
+
+.section-title.dark {
+  color: #0f172a;
+}
+
+.events-text {
+  max-width: 600px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+.event-days {
+  display: flex;
+  gap: 2rem;
+}
+
+.event-card {
+  background: #f5b700;
+  color: #7a1b0c;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.event-card span {
+  display: block;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.about-section {
+  background-color: #bff2f4;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.about-text {
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.8;
+  color: #1e293b;
+}
+
+.team-section {
+  background: linear-gradient(to bottom, #0f172a, #020617);
+  padding: 6rem 2rem;
+  text-align: center;
+  color: white;
+}
+
+.team-btn {
+  margin-top: 2rem;
+  padding: 1rem 2.5rem;
+  background-color: #bff2f4;
+  color: black;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.15em;
+}
