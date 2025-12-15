@@ -151,3 +151,146 @@
   cursor: pointer;
   letter-spacing: 0.15em;
 }
+
+/* Footer Main Container */
+#contact-us {
+  position: relative;
+  width: 100%;
+  background-color: #121213;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  border-top: 1px solid #7c3aed;
+}
+
+/* Content Container */
+.footer-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .footer-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Main Flex Layout */
+.footer-main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .footer-main-content {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+/* IIITB Logo Section */
+.footer-iiitb-logo {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.footer-iiitb-img {
+  height: 3rem;
+  width: auto;
+  object-fit: contain;
+  background-color: #0a0a23;
+}
+
+/* infin8 Logo Section */
+.footer-infin8-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-infin8-img {
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Contact Section */
+.footer-contact-title {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  font-family: 'Quicksand', sans-serif;
+}
+
+@media (min-width: 768px) {
+  .footer-contact-title {
+    text-align: left;
+  }
+}
+
+/* Contact Icons Container */
+.footer-contact-icons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* Individual Contact Icon */
+.footer-contact-icon {
+  color: #a78bfa; /* neon violet base */
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.footer-contact-icon:hover {
+  color: #fff;
+  text-shadow: 0 0 8px #a78bfa, 0 0 16px #9333ea, 0 0 24px #3b82f6;
+  transform: scale(1.2);
+}
+
+/* Footer Bottom Section */
+.footer-bottom {
+  margin-top: 2.5rem;
+}
+
+/* Glow Divider */
+.footer-glow-divider {
+  height: 0.375rem;
+  width: 100%;
+  background: white;
+  border-radius: 9999px;
+  opacity: 0.6;
+  filter: blur(1px);
+}
+
+/* Copyright Text */
+.footer-copyright {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-top: 1.5rem;
+}
+
+/* Quicksand Font Class */
+.quicksand-font {
+  font-family: 'Quicksand', sans-serif;
+}

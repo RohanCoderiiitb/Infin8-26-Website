@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FaqSection from "../../components/FaqSection/FaqSection";
+import { Mail, Phone, Linkedin, Smartphone } from "lucide-react";
 import "./HomePage.css";
 
 export default function HomePage() {
@@ -124,6 +125,53 @@ export default function HomePage() {
       </section>
 
       <FaqSection />
-    </div>
+      <footer id="contact-us">
+      <div className="footer-container">
+        <div className="footer-main-content">
+          <div className="footer-iiitb-logo">
+            <img
+            />
+          </div>
+          <div className="footer-infin8-logo">
+            <img
+            />
+          </div>
+          <div className="footer-contact">
+            <div className="footer-contact-title quicksand-font">GET IN TOUCH</div>
+            <div className="footer-contact-icons">
+              <a
+                href="mailto:sac@iiitb.ac.in"
+                className="footer-contact-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Mail size={28} />
+              </a>
+              <a
+                href="tel:"
+                className="footer-contact-icon"
+              >
+                <Phone size={28} />
+              </a>
+              <a
+                href="https://in.linkedin.com/company/infin8-iiitb"
+                className="footer-contact-icon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin size={28} />
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <div className="footer-glow-divider" />
+          <p className="footer-copyright">
+            © 2026 Infin8. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    </div> 
   );
 }
