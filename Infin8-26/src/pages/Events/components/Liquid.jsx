@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import tealBgImg from "../../../assets/1.png";
+import tealBgImg from "../../../assets/events_parallax/1.png";
 
 export default function LiquidBackground() {
   const canvasRef = useRef(null);

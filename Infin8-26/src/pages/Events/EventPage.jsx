@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { gsap } from "gsap";
 
-import surfaceImg from "../../assets/3.png";
-import sandImg from "../../assets/7.png";
+import surfaceImg from "../../assets/events_parallax/3.png";
+import sandImg from "../../assets/events_parallax/7.png";
 
 import "./EventPage.css";
 
@@ -108,9 +108,9 @@ export default function EventPage() {
     const preloadAssets = async () => {
       try {
         const [tallPlantsImg, ruinsImg, rocksImg] = await Promise.all([
-          import("../../assets/4.png"),
-          import("../../assets/5.png"),
-          import("../../assets/6.png"),
+          import("../../assets/events_parallax/4.png"),
+          import("../../assets/events_parallax/5.png"),
+          import("../../assets/events_parallax/6.png"),
         ]);
 
         lazyLoadImage(tallPlantsImg.default);
@@ -271,9 +271,9 @@ export default function EventPage() {
     if (!assetsLoaded) return;
 
     Promise.all([
-      import("../../assets/4.png"),
-      import("../../assets/5.png"),
-      import("../../assets/6.png"),
+      import("../../assets/events_parallax/4.png"),
+      import("../../assets/events_parallax/5.png"),
+      import("../../assets/events_parallax/6.png"),
     ]).then(([plants, ruins, rocks]) => {
       setTallPlantsImg(plants.default);
       setRuinsImg(ruins.default);
