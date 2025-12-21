@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 
 import surfaceImg from "../../assets/events_parallax/3.png";
 import sandImg from "../../assets/events_parallax/7.png";
+import eventCard from "../../assets/Event_card.png";
 
 import "./EventPage.css";
 
@@ -380,9 +381,7 @@ export default function EventPage() {
                 {Array.from({ length: 10 }).map((_, i) => (
                   <LazyPoster
                     key={i}
-                    src={`https://placehold.co/400x600/003344/FFF?text=Poster+${
-                      i + 1
-                    }`}
+                    src={eventCard}
                     title={`Event Name ${i + 1}`}
                     price="Prize: ₹10,000"
                   />
