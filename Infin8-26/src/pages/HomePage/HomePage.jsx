@@ -61,9 +61,9 @@ export default function HomePage() {
           )}
         </AnimatePresence>
 
-        <div class="timer-loc">
-          <h2 class="theme">UNDER THE SEA</h2>
-          <h3 class="comingsoon">COMING SOON</h3>
+        <div className="timer-loc">
+          <h2 className="theme">UNDER THE SEA</h2>
+          <h3 className="comingsoon">COMING SOON</h3>
           <CountDownTimer/>
         </div>
 
