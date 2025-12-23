@@ -28,6 +28,7 @@
 
 .faq-image img {
   display: block;
+  border: 9px solid white;
   border-radius: 40px;
   object-fit: cover;
   height: 580px;
@@ -118,6 +119,7 @@
 /* FAQ items */
 .faq-item {
   background-color: #4385D3;
+  border: 4px solid white;
   padding: 6px;
   border-radius: 18px;
   overflow: hidden;

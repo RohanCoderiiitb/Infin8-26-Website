@@ -3,9 +3,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FaqSection from "../../components/FaqSection/FaqSection";
-import { Mail, Phone, Linkedin, Smartphone } from "lucide-react";
+import { FaTwitter, FaInstagram, FaFacebook, FaLinkedin } from "react-icons/fa";
+import infin8logo from "../../assets/infin8-logo.png"
+import footerbg from "../../assets/footer-bg.png"
+import shell1 from "../../assets/shell1.png"
+import shell2 from "../../assets/shell2.png"
+import iiitblogo from "../../assets/iiitb-logo.png"
+import banner from "../../assets/banner.png"
+import whale from "../../assets/about-shark.png"
+import aboutimg from "../../assets/About.svg"
+import aboutinfin8 from "../../assets/Infin8.svg"
 import "./HomePage.css";
 import CountDownTimer from "./CountDownTimer";
+
 
 export default function HomePage() {
   const [open, setOpen] = useState(false);
@@ -112,16 +122,15 @@ export default function HomePage() {
       </section>
 
       <section className="about-section">
-        <h2 className="section-title dark">ABOUT INFIN8</h2>
+        <img src={aboutimg} alt="about" className="about-img"/>
+        <img src={aboutinfin8} alt="infin8" className="about-infin8-img"/>
+        <img src={whale} alt="whale" className="whale"/>
         <p className="about-text">
-          Infin8, the yearly cultural bash at IIITB, is a three-day extravaganza
-          filled with vibrant shows, performances, competitions, games, and
-          stalls. A unique and exciting experience for everyone.
-          <br /><br />
-          Talented artists from all corners of India come to showcase their
-          skills, turning it into a thrilling spectacle. What's more, lots of
-          students from other colleges in Bangalore join the fun, making Infin8
-          a true festival of creativity and celebration.
+          The annual cultural bash at IIIT-B, is a three-day extravaganza filled with<br/> vibrant shows, performances, competitions, games, and stalls.
+          <br/><br/>
+          A unique and exciting experience for everyone
+          <br/><br/>
+          Talented artists from all corners of India come to showcase their skills,<br/> turning it into a thrilling spectacle. What's more, lots of students from<br/> other colleges in Bangalore join the fun, making Infin8 a true festival of<br/> creativity and celebration.
         </p>
       </section>
 
@@ -134,52 +143,35 @@ export default function HomePage() {
 
       <FaqSection />
       <footer id="contact-us">
-      <div className="footer-container">
-        <div className="footer-main-content">
-          <div className="footer-iiitb-logo">
-            <img
-            />
-          </div>
-          <div className="footer-infin8-logo">
-            <img
-            />
-          </div>
-          <div className="footer-contact">
-            <div className="footer-contact-title quicksand-font">GET IN TOUCH</div>
-            <div className="footer-contact-icons">
-              <a
-                href="mailto:sac@iiitb.ac.in"
-                className="footer-contact-icon"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Mail size={28} />
-              </a>
-              <a
-                href="tel:"
-                className="footer-contact-icon"
-              >
-                <Phone size={28} />
-              </a>
-              <a
-                href="https://in.linkedin.com/company/infin8-iiitb"
-                className="footer-contact-icon"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin size={28} />
-              </a>
-            </div>
-          </div>
+        <img src={footerbg} className="bg-image"/>
+        <img src={shell1} className="shell shell1"/>
+        <img src={shell2} className="shell shell2"/>
+        <img src={iiitblogo} className="iiitb-logo"/>
+        <img src={banner} className="banner"/>
+        <img src={infin8logo} className="footer-infin8-logo"/>
+        <div className="banner-text">
+          <p>INFIN8. 2026. INFIN8. 2026. INFIN8 2026.</p>
         </div>
-        <div className="footer-bottom">
-          <div className="footer-glow-divider" />
-          <p className="footer-copyright">
-            © 2026 Infin8. All rights reserved.
-          </p>
+        <div className="social-icons">
+          <h2 className="get-in-touch">Get in touch.</h2>
+          <a href="https://x.com/infin8_iiitb" className="icon">
+            <span>Twitter</span>
+            <FaTwitter />
+          </a>
+          <a href="https://www.instagram.com/infin8_iiitb/" className="icon">
+            <span>Instagram</span>
+            <FaInstagram />
+          </a>
+          <a href="https://in.linkedin.com/company/infin8-iiitb" className="icon">
+            <span>LinkedIn</span>
+            <FaLinkedin />
+          </a>
+          <a href="https://www.facebook.com/infin8iiitb/" className="icon">
+            <span>Facebook</span>
+            <FaFacebook />
+          </a>
         </div>
-      </div>
-    </footer>
+      </footer>
     </div> 
   );
 }
