@@ -1,0 +1,65 @@
+[
+  {
+    "id": 101,
+    "day": 1,
+    "title": "Event 1",
+    "description": "",
+    "poster": "",
+    "date": "Jan 30, 2026",
+    "time": "10:00 AM",
+    "venue": "A",
+    "fee": "₹250",
+    "prize": "₹6,000",
+    "regLink": "https://forms.google.com/example",
+    "rulebook": "https://docs.google.com/example",
+    "coordinators": [
+      { "name": "Name 1", "phone": "" },
+      { "name": "Name 2", "phone": "" }
+    ]
+  },
+  {
+    "id": 102,
+    "day": 1,
+    "title": "Event 2",
+    "description": "",
+    "poster": "",
+    "date": "Jan 30, 2026",
+    "time": "2:00 PM",
+    "venue": "Venue 2",
+    "fee": "₹1000",
+    "prize": "₹25,000",
+    "regLink": "#",
+    "rulebook": "#",
+    "coordinators": [{ "name": "Name 1", "phone": "" }]
+  },
+  {
+    "id": 201,
+    "day": 2,
+    "title": "Event 1",
+    "description": "",
+    "poster": "",
+    "date": "Jan 31, 2026",
+    "time": "11:00 AM",
+    "venue": "Venue 1",
+    "fee": "",
+    "prize": "₹10,000",
+    "regLink": "#",
+    "rulebook": "#",
+    "coordinators": [{ "name": "Name 1", "phone": "+91 77777 77777" }]
+  },
+  {
+    "id": 301,
+    "day": 3,
+    "title": "Event 1",
+    "description": "",
+    "poster": "",
+    "date": "Feb 1, 2026",
+    "time": "6:00 PM",
+    "venue": "Venue 3",
+    "fee": "₹1500",
+    "prize": "₹30,000",
+    "regLink": "#",
+    "rulebook": "#",
+    "coordinators": [{ "name": "Name 1", "phone": "" }]
+  }
+]

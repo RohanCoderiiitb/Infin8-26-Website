@@ -1,147 +1,450 @@
 import React, { useEffect, useRef, useState } from "react";
-import dummyAvatar from "../../assets/dummy.webp";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import Papa from "papaparse";
 import "./TeamPage.css";
+import dummyImg from "../../assets/dummy.webp";
+import oceanBg from "../../assets/teams_page/background_t.jpg";
+import teamDataCSV from "../../data/Team_data.csv";
 
-const teamData = {
-  organizing: [
-    { name: "Person-1", role: "Role-1", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-2", role: "Role-2", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-3", role: "Role-3", img: dummyAvatar, linkedin: "#" },
-  ],
-  design: [
-    { name: "Person-4", role: "Role-4", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-5", role: "Role-5", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-6", role: "Role-6", img: dummyAvatar, linkedin: "#" },
-  ],
-  website: [
-    { name: "Person-7", role: "Role-7", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-8", role: "Role-8", img: dummyAvatar, linkedin: "#" },
-    { name: "Person-9", role: "Role-9", img: dummyAvatar, linkedin: "#" },
-  ],
+gsap.registerPlugin(ScrollTrigger);
+
+const teamImages = import.meta.glob("../../assets/teams_img/ID_*.*", {
+  eager: true,
+  import: "default",
+});
+
+const getTeamImage = (id) => {
+  const extensions = ["png", "jpg", "jpeg", "PNG", "JPG", "JPEG"];
+
+  for (const ext of extensions) {
+    const imagePath = `../../assets/teams_img/ID_${id}.${ext}`;
+
+    if (teamImages[imagePath]) {
+      return teamImages[imagePath];
+    }
+  }
+
+  return dummyImg;
 };
 
-const sections = [
-  { key: "organizing", label: "Organizing" },
-  { key: "design", label: "Design" },
-  { key: "website", label: "Website" },
-];
-
-export default function TeamPage() {
-  const sectionRefs = useRef({});
-  const scrollRef = useRef(null);
-  const [activeSection, setActiveSection] = useState(sections[0].key);
+const TeamCard = ({ member, size = "normal", preload = false }) => {
+  const cardRef = useRef(null);
+  const imgRef = useRef(null);
+  const [imgSrc, setImgSrc] = useState(dummyImg);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [cardVisible, setCardVisible] = useState(false);
 
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+    if (preload) {
+      const imageUrl = getTeamImage(member.id);
+      const img = new Image();
+      img.src = imageUrl;
 
-    const onScroll = () => {
-      const w = el.clientWidth || 1;
-      const idx = Math.round(el.scrollLeft / w);
-      const next = sections[idx]?.key;
-      if (next) setActiveSection(next);
+      img.onload = () => {
+        setImgSrc(imageUrl);
+        setImgLoaded(true);
+        setTimeout(() => setCardVisible(true), 50);
+      };
+
+      img.onerror = () => {
+        setImgSrc(dummyImg);
+        setImgLoaded(true);
+        setTimeout(() => setCardVisible(true), 50);
+      };
+
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const imageUrl = getTeamImage(member.id);
+
+            const img = new Image();
+            img.src = imageUrl;
+
+            img.onload = () => {
+              setImgSrc(imageUrl);
+              setImgLoaded(true);
+              setTimeout(() => setCardVisible(true), 50);
+            };
+
+            img.onerror = () => {
+              setImgSrc(dummyImg);
+              setImgLoaded(true);
+              setTimeout(() => setCardVisible(true), 50);
+            };
+
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: "100px",
+        threshold: 0.01,
+      }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
     };
+  }, [member.id, preload]);
 
-    el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
-  }, []);
+  const handlePointerMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-  const scrollTo = (key) => {
-    sectionRefs.current[key]?.scrollIntoView({
-      behavior: "smooth",
-      inline: "start",
-    });
-    setActiveSection(key);
+    card.style.setProperty("--mouse-x", `${x}%`);
+    card.style.setProperty("--mouse-y", `${y}%`);
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-white to-gray-100 text-gray-900">
-      <div
-        aria-hidden
-        className="fixed inset-0 z-0 bg-[radial-gradient(circle_at_20%_20%,rgba(220,220,220,0.45),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(200,200,200,0.35),transparent_35%),linear-gradient(180deg,#fafafa,#f0f0f0)]"
-      />
-
-      <header className="fixed inset-x-0 top-0 z-10 h-22.5 border-b border-black/10 bg-white/85 backdrop-blur-md">
-        <div className="mx-auto flex h-full max-w-6xl flex-col items-center justify-center gap-2 px-4">
-          <h1 className="m-0 text-[24px] font-semibold tracking-wide">
-            Meet our Team
-          </h1>
-
-          <nav className="flex items-center gap-6">
-            {sections.map(({ key, label }) => {
-              const active = activeSection === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => scrollTo(key)}
-                  className={[
-                    "relative cursor-pointer bg-transparent px-0 py-1 text-[14px] font-medium uppercase tracking-widest",
-                    active
-                      ? "text-gray-900"
-                      : "text-black/60 hover:text-gray-900",
-                    "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-gray-900 after:transition-[width] after:duration-300",
-                    active ? "after:w-full" : "after:w-0 hover:after:w-full",
-                  ].join(" ")}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </nav>
+    <div
+      ref={cardRef}
+      onMouseMove={handlePointerMove}
+      className={`team-card ${size === "large" ? "team-card-large" : ""} ${
+        cardVisible ? "card-visible" : "card-hidden"
+      }`}
+    >
+      <div className="electric-container">
+        <div className="border-outer-white">
+          <div className="border-inner-blue"></div>
         </div>
-      </header>
+        <div className="glow-layer-1"></div>
+        <div className="glow-layer-2"></div>
+      </div>
 
-      <main
-        ref={scrollRef}
-        className="team-hscroll relative z-1 mt-22.5 grid h-[calc(100vh-90px)] grid-flow-col auto-cols-[100vw] overflow-x-auto overscroll-x-contain scroll-smooth snap-x snap-mandatory"
-      >
-        {sections.map(({ key, label }) => (
-          <section
-            key={key}
-            ref={(el) => (sectionRefs.current[key] = el)}
-            className="team-section snap-start px-7 py-10"
-            aria-label={`${label} Team`}
-          >
-            <div className="mx-auto flex max-w-6xl flex-col gap-7">
-              <div>
-                <h2 className="m-0 text-[32px] font-semibold tracking-wide">
-                  {label} Team
-                </h2>
-              </div>
+      <div className="card-overlay-1"></div>
+      <div className="card-overlay-2"></div>
+      <div className="card-background-glow"></div>
+      <div className="card-spotlight"></div>
 
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-5">
-                {teamData[key].map((member) => (
-                  <a
-                    key={member.name}
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group relative h-75 overflow-hidden rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.2)]"
-                  >
-                    <img
-                      src={member.img}
-                      alt={member.name}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.06]"
-                    />
+      <div className="card-content-wrapper">
+        <div className="card-image-box">
+          <img
+            ref={imgRef}
+            src={imgSrc}
+            alt={member.name}
+            className={`card-img ${!imgLoaded ? "loading" : "loaded"}`}
+            loading="lazy"
+          />
+          <div className="card-gradient-overlay"></div>
+        </div>
 
-                    <div className="absolute inset-0 bg-linear-to-b from-black/10 to-black/55" />
+        <div className="card-text-box">
+          <h3 className="card-member-name">{member.name}</h3>
+          <p className="card-member-role">{member.role}</p>
+          {member.linkedin && (
+            <a
+              href={member.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="linkedin-link"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg
+                className="linkedin-icon"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+              </svg>
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-                    <div className="absolute inset-x-0 bottom-0 z-1 p-5">
-                      <h3 className="m-0 text-[20px] font-semibold text-white">
-                        {member.name}
-                      </h3>
-                      <span className="mt-1 block text-[12px] font-medium uppercase tracking-[1.2px] text-white/85">
-                        {member.role}
-                      </span>
-                    </div>
-                  </a>
+export default function TeamPage() {
+  const lenisRef = useRef(null);
+  const [teamData, setTeamData] = useState({
+    organizers: [],
+    website: [],
+    designers: [],
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(teamDataCSV)
+      .then((response) => response.text())
+      .then((csvText) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            const data = results.data;
+
+            const organizers = data
+              .filter((member) => member.Role === "Organizing Committee")
+              .map((member) => ({
+                id: member.Id,
+                name: member.Name1,
+                role: "Organizing Committee",
+                linkedin: member["linkedin profile url"] || "",
+              }));
+
+            const website = data
+              .filter((member) => member.Role === "Website")
+              .map((member) => ({
+                id: member.Id,
+                name: member.Name1,
+                role: "Website",
+                linkedin: member["linkedin profile url"] || "",
+              }));
+
+            const designers = data
+              .filter((member) => member.Role === "Design")
+              .map((member) => ({
+                id: member.Id,
+                name: member.Name1,
+                role: "Design",
+                linkedin: member["linkedin profile url"] || "",
+              }));
+
+            setTeamData({ organizers, website, designers });
+            setLoading(false);
+          },
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+      smoothTouch: true,
+    });
+    lenisRef.current = lenis;
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray(".vertical-divider").forEach((line, i) => {
+        gsap.from(line, {
+          scaleY: 0,
+          duration: 1.5,
+          ease: "power3.out",
+          delay: i * 0.15,
+        });
+      });
+
+      const gridWrapper = document.querySelector(".team-grid-wrapper");
+      const desktopGrid = document.querySelector(".desktop-grid");
+      const websiteContainer = document.querySelector(
+        ".team-column-left .team-cards-container"
+      );
+      const designersContainer = document.querySelector(
+        ".team-column-right .team-cards-container"
+      );
+      const organizersContainer = document.querySelector(
+        ".team-column-middle .team-cards-container"
+      );
+
+      if (!gridWrapper || !desktopGrid) return;
+
+      const viewportHeight = window.innerHeight;
+      const scrollDistance = 4500;
+
+      gridWrapper.style.minHeight = `${viewportHeight + scrollDistance}px`;
+
+      ScrollTrigger.create({
+        trigger: gridWrapper,
+        start: "top top",
+        end: `+=${scrollDistance}`,
+        pin: desktopGrid,
+        pinSpacing: true,
+      });
+
+      gsap.to(websiteContainer, {
+        y: -1800,
+        ease: "none",
+        scrollTrigger: {
+          trigger: gridWrapper,
+          start: "top top",
+          end: `+=${scrollDistance}`,
+          scrub: 1.5,
+        },
+      });
+
+      gsap.to(designersContainer, {
+        y: -2700,
+        ease: "none",
+        scrollTrigger: {
+          trigger: gridWrapper,
+          start: "top top",
+          end: `+=${scrollDistance}`,
+          scrub: 1.2,
+        },
+      });
+
+      gsap.to(organizersContainer, {
+        y: -4400,
+        ease: "none",
+        scrollTrigger: {
+          trigger: gridWrapper,
+          start: "top top",
+          end: `+=${scrollDistance}`,
+          scrub: 1,
+        },
+      });
+
+      ScrollTrigger.refresh();
+    });
+
+    return () => {
+      ctx.revert();
+      lenis.destroy();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div className="relative min-h-screen w-full flex items-center justify-center">
+        <div className="text-2xl text-[#001148] font-bold">Loading team...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      <svg className="svg-filters"></svg>
+
+      <div className="fixed inset-0 z-0">
+        <img
+          src={oceanBg}
+          alt="Ocean Background"
+          className="w-full h-full object-cover brightness-125"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#b3d9e8]/20 via-[#4a9ec1]/10 to-[#1a5c7a]/40"></div>
+        <div className="light-rays">
+          <div className="light-ray ray-1"></div>
+          <div className="light-ray ray-2"></div>
+          <div className="light-ray ray-3"></div>
+        </div>
+      </div>
+
+      <div className="fixed inset-0 z-1 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${15 + Math.random() * 10}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10">
+        <header className="team-header-static">
+          <h1 className="main-title">MEET OUR TEAM</h1>
+          <div className="title-underline"></div>
+        </header>
+
+        <div className="team-grid-wrapper">
+          <div className="desktop-grid">
+            <div className="team-column team-column-left">
+              <div className="vertical-divider"></div>
+              <div className="column-label">WEBSITE</div>
+              <div className="team-cards-container">
+                {teamData.website.map((member, index) => (
+                  <TeamCard
+                    key={member.id}
+                    member={member}
+                    preload={index < 2}
+                  />
                 ))}
               </div>
             </div>
+
+            <div className="team-column team-column-middle">
+              <div className="vertical-divider vertical-divider-center"></div>
+              <div className="column-label column-label-center">ORGANIZERS</div>
+              <div className="team-cards-container">
+                {teamData.organizers.map((member, index) => (
+                  <TeamCard
+                    key={member.id}
+                    member={member}
+                    size="large"
+                    preload={index < 2}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="team-column team-column-right">
+              <div className="vertical-divider"></div>
+              <div className="column-label">DESIGNERS</div>
+              <div className="team-cards-container">
+                {teamData.designers.map((member, index) => (
+                  <TeamCard
+                    key={member.id}
+                    member={member}
+                    preload={index < 2}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mobile-grid">
+          <section className="mobile-section">
+            <h2 className="mobile-title">ORGANIZERS</h2>
+            <div className="mobile-cards">
+              {teamData.organizers.map((member, index) => (
+                <TeamCard key={member.id} member={member} preload={index < 2} />
+              ))}
+            </div>
           </section>
-        ))}
-      </main>
+
+          <section className="mobile-section">
+            <h2 className="mobile-title">WEBSITE</h2>
+            <div className="mobile-cards">
+              {teamData.website.map((member, index) => (
+                <TeamCard key={member.id} member={member} preload={index < 2} />
+              ))}
+            </div>
+          </section>
+
+          <section className="mobile-section">
+            <h2 className="mobile-title">DESIGNERS</h2>
+            <div className="mobile-cards">
+              {teamData.designers.map((member, index) => (
+                <TeamCard key={member.id} member={member} preload={index < 2} />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
