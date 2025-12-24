@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { gsap } from "gsap";
 
-// IMPORT ASSETS
 import baseBgImg from "../../assets/events_parallax/1.png";
 import surfaceImg from "../../assets/events_parallax/3.png";
 import sandImg from "../../assets/events_parallax/7.png";
-import defaultEventCard from "../../assets/Event_card.png"; // Renamed for clarity
+import defaultEventCard from "../../assets/Event_card.png";
 
-// IMPORT DATA
 import eventsData from "../../data/events.json";
 
 import "./EventPage.css";
 
-// --- NEW COMPONENT: EVENT MODAL ---
 const EventModal = ({ event, onClose }) => {
   if (!event) return null;
 
-  // Use the poster from JSON if available, otherwise default
   const posterSrc = event.poster ? event.poster : defaultEventCard;
 
   return (
@@ -27,14 +23,12 @@ const EventModal = ({ event, onClose }) => {
         </button>
 
         <div className="modal-layout">
-          {/* Left Side: Poster */}
           <div className="modal-left">
             <div className="modal-poster-wrapper">
               <img src={posterSrc} alt={event.title} />
             </div>
           </div>
 
-          {/* Right Side: Details */}
           <div className="modal-right">
             <h2 className="modal-title">{event.title}</h2>
 
@@ -131,7 +125,6 @@ const DAYS_DATA = [
   { id: 3, title: "The Abyss", date: "FEB 1" },
 ];
 
-// Updated LazyPoster to accept onClick
 const LazyPoster = React.memo(({ src, title, price, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -201,7 +194,6 @@ export default function EventPage() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
 
-  // NEW STATE FOR MODAL
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const scrollTimeoutRef = useRef(null);
