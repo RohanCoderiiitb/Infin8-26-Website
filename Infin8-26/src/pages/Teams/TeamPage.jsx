@@ -364,6 +364,25 @@ export default function TeamPage() {
       </div>
 
       <div className="relative z-10">
+        <button
+  onClick={() => window.history.back()}
+  className="back-button"
+  aria-label="Go back"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="back-button-icon"
+  >
+    <path d="m12 19-7-7 7-7"></path>
+    <path d="M19 12H5"></path>
+  </svg>
+</button>
         <header className="team-header-static">
           <h1 className="main-title">MEET OUR TEAM</h1>
           <div className="title-underline"></div>

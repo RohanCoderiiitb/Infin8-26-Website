@@ -4,15 +4,17 @@ import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FaqSection from "../../components/FaqSection/FaqSection";
 import { FaTwitter, FaInstagram, FaFacebook, FaLinkedin } from "react-icons/fa";
-import infin8logo from "../../assets/infin8-logo.png"
-import footerbg from "../../assets/footer-bg.png"
-import shell1 from "../../assets/shell1.png"
-import shell2 from "../../assets/shell2.png"
-import iiitblogo from "../../assets/iiitb-logo.png"
-import banner from "../../assets/banner.png"
+import infin8logo from "../../assets/footer/infin8-logo.png"
+import footerbg from "../../assets/footer/footer-bg.png"
+import shell1 from "../../assets/footer/shell1.png"
+import shell2 from "../../assets/footer/shell2.png"
+import iiitblogo from "../../assets/footer/iiitb-logo.png"
+import banner from "../../assets/footer/banner.png"
 import whale from "../../assets/about-shark.png"
 import aboutimg from "../../assets/About.svg"
 import aboutinfin8 from "../../assets/Infin8.svg"
+import pufferfish from "../../assets/Home/puffer-fish.png"
+import eventgif from "../../assets/Home/events.gif"
 import "./HomePage.css";
 import CountDownTimer from "./CountDownTimer";
 
@@ -79,52 +81,10 @@ export default function HomePage() {
 
       </section>
 
-      <section className="events-section">
-        <div className="events-content">
-          <h2 className="section-title">EVENTS</h2>
-
-          <p className="events-text">
-            From heart-thumping dance battles and soulful musical performances
-            to intense gaming showdowns and quirky quizzes, Infin8’s events are
-            a treasure trove of opportunities to shine. Dive in, compete, and
-            experience the thrill of creating memories that last a lifetime.
-          </p>
-
-          <div className="event-days">
-            <div
-              className="event-card"
-              onClick={() => navigate("/events?day=1")}
-              role="button"
-            >
-              E1
-              <span>Day 1</span>
-            </div>
-
-            <div
-              className="event-card"
-              onClick={() => navigate("/events?day=2")}
-              role="button"
-            >
-              E2
-              <span>Day 2</span>
-            </div>
-
-            <div
-              className="event-card"
-              onClick={() => navigate("/events?day=3")}
-              role="button"
-            >
-              E3
-              <span>Day 3</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="about-section">
-        <img src={aboutimg} alt="about" className="about-img"/>
-        <img src={aboutinfin8} alt="infin8" className="about-infin8-img"/>
-        <img src={whale} alt="whale" className="whale"/>
+        <img src={aboutimg} alt="about" className="about-img" loading="lazy"/>
+        <img src={aboutinfin8} alt="infin8" className="about-infin8-img" loading="lazy"/>
+        <img src={whale} alt="whale" className="whale" loading="lazy"/>
         <p className="about-text">
           The annual cultural bash at IIIT-B, is a three-day extravaganza filled with<br/> vibrant shows, performances, competitions, games, and stalls.
           <br/><br/>
@@ -134,21 +94,61 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="team-section">
+      <section className="gallery">
+
+      </section>
+
+      <section className="events-section">
+        <div className="events-content">
+          <div className="left-content">
+            <h2 className="section-title">Events</h2>
+
+            <p className="events-text">
+              From heart-thumping dance battles and soulful musical performances
+              to intense gaming showdowns and quirky<br/> quizzes, Infin8’s events are
+              a treasure trove of opportunities<br/> to shine. Dive in, compete, and
+              experience the thrill of<br/> creating memories that last a lifetime.
+            </p>
+
+            <div className="event-days">
+              <div className="event-card" onClick={() => navigate("/events?day=1")} role="button">
+                <img src={pufferfish} alt="Day 1" className="pufferfish" />
+                <span>Day 1</span>
+              </div>
+
+              <div className="event-card" onClick={() => navigate("/events?day=2")} role="button">
+                <img src={pufferfish} alt="Day 2" className="pufferfish" />
+                <span>Day 2</span>
+              </div>
+
+              <div className="event-card" onClick={() => navigate("/events?day=3")} role="button">
+                <img src={pufferfish} alt="Day 3" className="pufferfish" />
+                <span>Day 3</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="right-content">
+            <img src={eventgif} alt="event-gif" className="event-gif" loading="lazy" />
+          </div>
+        </div>
+      </section>
+
+      {/* <section className="team-section">
         <h2 className="section-title">MEET OUR TEAM</h2>
         <button className="team-btn" onClick={() => navigate("/teams")}>
           VIEW TEAM
         </button>
-      </section>
+      </section> */}
 
       <FaqSection />
       <footer id="contact-us">
-        <img src={footerbg} className="bg-image"/>
-        <img src={shell1} className="shell shell1"/>
-        <img src={shell2} className="shell shell2"/>
-        <img src={iiitblogo} className="iiitb-logo"/>
-        <img src={banner} className="banner"/>
-        <img src={infin8logo} className="footer-infin8-logo"/>
+        <img src={footerbg} className="bg-image" loading="lazy"/>
+        <img src={shell1} className="shell shell1" loading="lazy"/>
+        <img src={shell2} className="shell shell2" loading="lazy"/>
+        <img src={iiitblogo} className="iiitb-logo" loading="lazy"/>
+        <img src={banner} className="banner" loading="lazy"/>
+        <img src={infin8logo} className="footer-infin8-logo" loading="lazy"/>
         <div className="banner-text">
           <p>INFIN8. 2026. INFIN8. 2026. INFIN8 2026.</p>
         </div>

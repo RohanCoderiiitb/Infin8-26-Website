@@ -62,7 +62,7 @@ export default function FaqSection() {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="faq-image">
-          <img src={logo} alt="FAQ Image" />
+          <img src={logo} alt="FAQ Image" loading="lazy"/>
         </div>
       </motion.div>
 
@@ -92,7 +92,7 @@ export default function FaqSection() {
                     animate={{ rotate: openIndex === index ? 180 : 0 }}
                     className="faq-icon"
                   >
-                    <img src={arrow} alt="Down Arrow" />
+                    <img src={arrow} alt="Down Arrow" loading="lazy"/>
                   </motion.span>
                 </button>
 

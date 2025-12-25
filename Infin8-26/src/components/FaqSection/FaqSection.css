@@ -64,22 +64,22 @@
 }
 
 .faq-header {
+  margin-top: -50px;
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 10px;
 }
 
 .faq-title {
   font-family: 'Legends Of The Sea',sans-serif;
-  font-size: 50px;
-  font-weight: 800;
+  font-size: 100px;
+  font-weight: 400;
   color: #ffffff;
 }
 
 .faq-scrollbar {
   flex: 1; 
   scrollbar-width: thin;
-  height:480px;
+  height: 480px;
   overflow-y: auto; 
   display: flex;
   flex-direction: column;
@@ -134,7 +134,7 @@
   border: none;
   padding: 18px 22px;
   font-family: 'Archivo', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: #000;
   display: flex;

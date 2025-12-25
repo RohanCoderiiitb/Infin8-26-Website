@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "Legends of the Sea";
+  src: url("/fonts/LegendsOfTheSea-Regular.woff2") format("woff2"),
+       url("/fonts/LegendsOfTheSea-Regular.woff") format("woff");
+}
+
 .home-wrapper {
   width: 100%;
   overflow-x: hidden;
@@ -68,58 +74,92 @@
 }
 
 .events-section {
-  background-color: #c81d25;
-  padding: 6rem 2rem;
+  background-color: #001148;
+  padding: 3rem 2rem;
   color: white;
 }
 
 .events-content {
   max-width: 1100px;
-  margin: auto;
+  margin: 0 auto;
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  flex-wrap: wrap
+}
+
+.left-content {
+  margin-top: -20px;
+  flex: 1 1 500px;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+.right-content {
+  margin-top: 100px;
+  flex: 1 1 400px;
+  display: flex;
+  align-items: center;
+}
+
+.event-gif {
+  width: 100%;   
+  max-width: 1200px;
+  border-radius: 100%;
+  height: auto;
 }
 
 .section-title {
-  font-size: 2.8rem;
-  font-weight: 800;
-  letter-spacing: 0.25em;
-  margin-bottom: 1.5rem;
-}
-
-.section-title.dark {
-  color: #0f172a;
+  font-family: "Legends of the Sea", sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 400;
+  color: white;
 }
 
 .events-text {
   max-width: 600px;
-  line-height: 1.8;
+  color: #D6E9FF;
+  font-family: 'Imprima', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
   margin-bottom: 3rem;
 }
 
 .event-days {
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap; 
 }
 
 .event-card {
-  background: #f5b700;
-  color: #7a1b0c;
-  padding: 2rem 2.5rem;
-  border-radius: 10px;
-  font-weight: 800;
-  text-align: center;
+  background: none;   
+  padding: 0;              
+  border-radius: 50%;        
+  width: 120px;               
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.event-card span {
-  display: block;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  transition: transform 0.3s ease;
 }
 
 .event-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+  transform: scale(1.3);
+}
+
+.pufferfish {
+  width: 80px;           
+  height: 80px;
+  object-fit: contain;
+}
+
+.event-card span {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 700;
 }
 
 .about-section {
@@ -218,6 +258,10 @@
 
 .footer-infin8-logo{
   position: absolute;
+  bottom: 10px;
+  left: 200px;
+  height:600px;
+  width:600px;
   
 }
 
@@ -266,7 +310,7 @@
 
   font-family: 'Archivo', sans-serif;
   font-size: 18px;
-  color: #4385D3;
+  color: #2A91FB;
   z-index: 1000;
 }
 
@@ -281,7 +325,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #4385D3;
+  color: #2A91FB;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -345,4 +389,10 @@
   margin-top: 2rem;
   font-size: 1.8rem;
   font-weight: 700;
+}
+
+/* ---------------------- */
+.gallery{
+  background: linear-gradient(#1B4FFE,#072074);
+  padding: 6rem 2rem;
 }
