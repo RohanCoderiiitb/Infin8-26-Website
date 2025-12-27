@@ -15,6 +15,20 @@ import aboutimg from "../../assets/About.svg"
 import aboutinfin8 from "../../assets/Infin8.svg"
 import pufferfish from "../../assets/Home/puffer-fish.png"
 import eventgif from "../../assets/Home/events.gif"
+import seabed from "../../assets/Home/gallery-seabed.png"
+import waves from "../../assets/Home/gallery-waves.png"
+import galleryimg1 from "../../assets/Home/gallery-temp1.png"
+import galleryimg2 from "../../assets/Home/gallery-temp2.png"
+import galleryimg3 from "../../assets/Home/gallery-temp3.png"
+import coral1 from "../../assets/Home/coral1.png"
+import coral2 from "../../assets/Home/coral2.png"
+import coral3 from "../../assets/Home/coral3.png"
+import coral4 from "../../assets/Home/coral4.png"
+import coral5 from "../../assets/Home/coral5.png"
+import coral6 from "../../assets/Home/coral6.png"
+import coral7 from "../../assets/Home/coral7.png"
+import coral8 from "../../assets/Home/coral8.png"
+import fish from "../../assets/Home/fish.png"
 import "./HomePage.css";
 import CountDownTimer from "./CountDownTimer";
 
@@ -144,7 +158,22 @@ export default function HomePage() {
 
 
       <section className="gallery">
-
+          <motion.div className="moving-image">
+            <img src={galleryimg1} alt="img1" className="gallery-img1" loading="lazy"/>
+            <img src={galleryimg2} alt="img2" className="gallery-img2" loading="lazy"/>
+            <img src={galleryimg3} alt="img3" className="gallery-img3" loading="lazy"/>
+          </motion.div>
+          <img src={waves} alt="waves" className="waves" loading="lazy"/>
+          <img src={seabed} alt="seabed" className="seabed" loading="lazy"/>
+          <img src={coral1} alt="coral1" className="gallery-coral1" loading="lazy"/>
+          <img src={coral2} alt="coral2" className="gallery-coral2" loading="lazy"/>
+          <img src={coral3} alt="coral3" className="gallery-coral3" loading="lazy"/>
+          <img src={coral4} alt="coral4" className="gallery-coral4" loading="lazy"/>
+          <img src={coral5} alt="coral5" className="gallery-coral5" loading="lazy"/>
+          <img src={coral6} alt="coral6" className="gallery-coral6" loading="lazy"/>
+          <img src={coral7} alt="coral7" className="gallery-coral7" loading="lazy"/>
+          <img src={coral8} alt="coral8" className="gallery-coral8" loading="lazy"/>
+          <img src={fish} alt="fish" className="gallery-fish" loading="lazy"/>
       </section>
 
       <section className="events-section">
@@ -176,6 +205,7 @@ export default function HomePage() {
               From heart-thumping dance battles and soulful musical performances
               to intense gaming showdowns and quirky quizzes, Infin8’s events are
               a treasure trove of opportunities to shine.
+              Dive in, compete, and experience the thrill of creating memories that last a lifetime.
             </motion.p>
 
             <div className="event-days">
@@ -187,15 +217,16 @@ export default function HomePage() {
                   role="button"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.4, delay: 0.1 * day }}
                   viewport={{ once: true }}
                 >
-                  <img src={pufferfish} alt={`Day ${day}`} className="pufferfish" />
-                  <span>Day {day}</span>
-                </motion.div>
+                  <motion.img src={pufferfish} alt={`Day ${day}`} className="pufferfish" whileHover={{ scale: 1.2 }}
+                    transition={{ type: "spring", stiffness: 300 }} />
+                    <span>Day {day}</span>
+                  </motion.div>
               ))}
             </div>
+
           </div>
             
           <motion.div
