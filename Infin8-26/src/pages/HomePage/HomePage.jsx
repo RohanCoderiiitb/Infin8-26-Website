@@ -82,57 +82,135 @@ export default function HomePage() {
       </section>
 
       <section className="about-section">
-        <img src={aboutimg} alt="about" className="about-img" loading="lazy"/>
-        <img src={aboutinfin8} alt="infin8" className="about-infin8-img" loading="lazy"/>
-        <img src={whale} alt="whale" className="whale" loading="lazy"/>
-        <p className="about-text">
-          The annual cultural bash at IIIT-B, is a three-day extravaganza filled with<br/> vibrant shows, performances, competitions, games, and stalls.
-          <br/><br/>
-          A unique and exciting experience for everyone
-          <br/><br/>
-          Talented artists from all corners of India come to showcase their skills,<br/> turning it into a thrilling spectacle. What's more, lots of students from<br/> other colleges in Bangalore join the fun, making Infin8 a true festival of<br/> creativity and celebration.
-        </p>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.2 } }
+          }}
+        >
+          <motion.img
+            src={aboutimg}
+            alt="about"
+            className="about-img"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          />
+
+          <motion.img
+            src={aboutinfin8}
+            alt="infin8"
+            className="about-infin8-img"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          />
+
+          <motion.img
+            src={whale}
+            alt="whale"
+            className="whale"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          />
+
+          <motion.p
+            className="about-text"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            The annual cultural bash at IIIT-B, is a three-day extravaganza filled with<br/>
+            vibrant shows, performances, competitions, games, and stalls.
+            <br/><br/>
+            A unique and exciting experience for everyone
+            <br/><br/>
+            Talented artists from all corners of India come to showcase their skills,<br/>
+            turning it into a thrilling spectacle. What's more, lots of students from<br/>
+            other colleges in Bangalore join the fun, making Infin8 a true festival of<br/>
+            creativity and celebration.
+          </motion.p>
+        </motion.div>
       </section>
+
+
 
       <section className="gallery">
 
       </section>
 
       <section className="events-section">
-        <div className="events-content">
+        <motion.div
+          className="events-content"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
           <div className="left-content">
-            <h2 className="section-title">Events</h2>
+            <motion.h2
+              className="section-title"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              Events
+            </motion.h2>
 
-            <p className="events-text">
+            <motion.p
+              className="events-text"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               From heart-thumping dance battles and soulful musical performances
-              to intense gaming showdowns and quirky<br/> quizzes, Infin8’s events are
-              a treasure trove of opportunities<br/> to shine. Dive in, compete, and
-              experience the thrill of<br/> creating memories that last a lifetime.
-            </p>
+              to intense gaming showdowns and quirky quizzes, Infin8’s events are
+              a treasure trove of opportunities to shine.
+            </motion.p>
 
             <div className="event-days">
-              <div className="event-card" onClick={() => navigate("/events?day=1")} role="button">
-                <img src={pufferfish} alt="Day 1" className="pufferfish" />
-                <span>Day 1</span>
-              </div>
-
-              <div className="event-card" onClick={() => navigate("/events?day=2")} role="button">
-                <img src={pufferfish} alt="Day 2" className="pufferfish" />
-                <span>Day 2</span>
-              </div>
-
-              <div className="event-card" onClick={() => navigate("/events?day=3")} role="button">
-                <img src={pufferfish} alt="Day 3" className="pufferfish" />
-                <span>Day 3</span>
-              </div>
+              {[1, 2, 3].map((day) => (
+                <motion.div
+                  key={day}
+                  className="event-card"
+                  onClick={() => navigate(`/events?day=${day}`)}
+                  role="button"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.4, delay: 0.1 * day }}
+                  viewport={{ once: true }}
+                >
+                  <img src={pufferfish} alt={`Day ${day}`} className="pufferfish" />
+                  <span>Day {day}</span>
+                </motion.div>
+              ))}
             </div>
           </div>
-
-          <div className="right-content">
-            <img src={eventgif} alt="event-gif" className="event-gif" loading="lazy" />
-          </div>
-        </div>
+            
+          <motion.div
+            className="right-content"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <img src={eventgif} alt="event-gif" className="event-gif" />
+          </motion.div>
+        </motion.div>
       </section>
+
+
 
       {/* <section className="team-section">
         <h2 className="section-title">MEET OUR TEAM</h2>

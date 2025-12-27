@@ -62,7 +62,7 @@ export default function FaqSection() {
         viewport={{ once: true, amount: 0.3 }}
       >
         <div className="faq-image">
-          <img src={logo} alt="FAQ Image" loading="lazy"/>
+          <img src={logo} alt="FAQ Image"/>
         </div>
       </motion.div>
 
