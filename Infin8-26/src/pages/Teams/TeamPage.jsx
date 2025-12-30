@@ -268,7 +268,7 @@ export default function TeamPage() {
       if (!gridWrapper || !desktopGrid) return;
 
       const viewportHeight = window.innerHeight;
-      const scrollDistance = 4500;
+      const scrollDistance = 5200;
 
       gridWrapper.style.minHeight = `${viewportHeight + scrollDistance}px`;
 
@@ -303,7 +303,7 @@ export default function TeamPage() {
       });
 
       gsap.to(organizersContainer, {
-        y: -4400,
+        y: -5000,
         ease: "none",
         scrollTrigger: {
           trigger: gridWrapper,
