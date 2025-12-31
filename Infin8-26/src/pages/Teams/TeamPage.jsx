@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -10,112 +10,211 @@ import teamDataCSV from "../../data/Team_data.csv";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const teamImages = import.meta.glob("../../assets/teams_img/ID_*.*", {
+const teamImagesHi = import.meta.glob("../../assets/teams_img/ID_*.*", {
   eager: true,
   import: "default",
 });
 
-const getTeamImage = (id) => {
-  const extensions = ["png", "jpg", "jpeg", "PNG", "JPG", "JPEG"];
+const teamImagesLo = import.meta.glob("../../assets/teams_img/ID_*.*", {
+  eager: true,
+  import: "default",
+  query: "?w=240&format=webp&quality=35",
+});
 
-  for (const ext of extensions) {
-    const imagePath = `../../assets/teams_img/ID_${id}.${ext}`;
+const getImageMaps = () => {
+  const hiMap = new Map();
+  const loMap = new Map();
 
-    if (teamImages[imagePath]) {
-      return teamImages[imagePath];
+  for (const path of Object.keys(teamImagesHi)) {
+    const match = path.match(/ID_(\d+)\./);
+    if (match) {
+      const id = match[1];
+      if (!hiMap.has(id)) hiMap.set(id, teamImagesHi[path]);
     }
   }
 
-  return dummyImg;
+  for (const path of Object.keys(teamImagesLo)) {
+    const match = path.match(/ID_(\d+)\./);
+    if (match) {
+      const id = match[1];
+      if (!loMap.has(id)) loMap.set(id, teamImagesLo[path]);
+    }
+  }
+
+  return { hiMap, loMap };
 };
 
-const TeamCard = ({ member, size = "normal", preload = false }) => {
-  const cardRef = useRef(null);
-  const imgRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState(dummyImg);
-  const [imgLoaded, setImgLoaded] = useState(false);
-  const [cardVisible, setCardVisible] = useState(false);
+const { hiMap, loMap } = getImageMaps();
 
-  useEffect(() => {
-    if (preload) {
-      const imageUrl = getTeamImage(member.id);
-      const img = new Image();
-      img.src = imageUrl;
+const getTeamImage = (id, variant = "hi") => {
+  const map = variant === "lo" ? loMap : hiMap;
+  return map.get(String(id)) || dummyImg;
+};
 
-      img.onload = () => {
-        setImgSrc(imageUrl);
-        setImgLoaded(true);
-        setTimeout(() => setCardVisible(true), 50);
-      };
+const __decodePromiseCache = new Map();
+const __decodedSet = new Set();
 
-      img.onerror = () => {
-        setImgSrc(dummyImg);
-        setImgLoaded(true);
-        setTimeout(() => setCardVisible(true), 50);
-      };
+const decodeImage = (url) => {
+  if (!url || url === dummyImg) return Promise.resolve(url);
+  if (__decodedSet.has(url)) return Promise.resolve(url);
+  const cached = __decodePromiseCache.get(url);
+  if (cached) return cached;
 
-      return;
+  const p = new Promise((resolve) => {
+    const img = new Image();
+    img.src = url;
+
+    const done = () => {
+      __decodedSet.add(url);
+      __decodePromiseCache.set(url, Promise.resolve(url));
+      resolve(url);
+    };
+
+    if (typeof img.decode === "function") {
+      img.decode().then(done).catch(done);
+    } else {
+      img.onload = done;
+      img.onerror = done;
     }
+  });
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const imageUrl = getTeamImage(member.id);
+  __decodePromiseCache.set(url, p);
+  return p;
+};
 
-            const img = new Image();
-            img.src = imageUrl;
+const preloadWithPriority = async (
+  urls,
+  priorityCount = 8,
+  concurrency = 4
+) => {
+  const list = Array.from(new Set(urls.filter(Boolean)));
+  const priority = list.slice(0, priorityCount);
+  const rest = list.slice(priorityCount);
 
-            img.onload = () => {
-              setImgSrc(imageUrl);
-              setImgLoaded(true);
-              setTimeout(() => setCardVisible(true), 50);
-            };
-
-            img.onerror = () => {
-              setImgSrc(dummyImg);
-              setImgLoaded(true);
-              setTimeout(() => setCardVisible(true), 50);
-            };
-
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        rootMargin: "100px",
-        threshold: 0.01,
+  const runWithConcurrency = async (batch) => {
+    let i = 0;
+    const workers = Array.from(
+      { length: Math.min(concurrency, batch.length) },
+      async () => {
+        while (i < batch.length) {
+          const url = batch[i++];
+          await decodeImage(url);
+        }
       }
     );
+    await Promise.all(workers);
+  };
 
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+  await runWithConcurrency(priority);
+
+  if (rest.length > 0) {
+    const run = () => runWithConcurrency(rest).catch(() => {});
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      window.requestIdleCallback(run, { timeout: 2500 });
+    } else {
+      setTimeout(run, 80);
     }
+  }
+};
 
+const normalizeMember = (m, role) => ({
+  id: (m.Id ?? "").trim(),
+  name: (m.Name1 ?? "").trim(),
+  role,
+  linkedin: (m["linkedin profile url"] ?? "").trim(),
+});
+
+const TeamCard = ({ member, size = "normal", isPriority = false }) => {
+  const cardRef = useRef(null);
+  const rafMoveRef = useRef(0);
+  const lastEvtRef = useRef(null);
+
+  const loSrc = useMemo(() => getTeamImage(member.id, "lo"), [member.id]);
+  const hiSrc = useMemo(() => getTeamImage(member.id, "hi"), [member.id]);
+
+  const [activated, setActivated] = useState(isPriority);
+  const [loLoaded, setLoLoaded] = useState(false);
+  const [hiDecoded, setHiDecoded] = useState(__decodedSet.has(hiSrc));
+  const [loError, setLoError] = useState(false);
+  const [hiError, setHiError] = useState(false);
+
+  useEffect(() => {
+    if (activated) return;
+
+    const el = cardRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActivated(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "220px", threshold: 0.01 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [activated]);
+
+  useEffect(() => {
+    if (!activated) return;
+    if (!hiSrc || hiSrc === dummyImg) return;
+    if (hiDecoded) return;
+
+    let cancelled = false;
+    decodeImage(hiSrc).then(() => {
+      if (!cancelled) setHiDecoded(true);
+    });
     return () => {
-      if (observer) {
-        observer.disconnect();
-      }
+      cancelled = true;
     };
-  }, [member.id, preload]);
+  }, [activated, hiSrc, hiDecoded]);
 
-  const handlePointerMove = (e) => {
+  useEffect(() => {
+    return () => {
+      if (rafMoveRef.current) cancelAnimationFrame(rafMoveRef.current);
+    };
+  }, []);
+
+  const applyPointer = (e) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
-
     card.style.setProperty("--mouse-x", `${x}%`);
     card.style.setProperty("--mouse-y", `${y}%`);
   };
+
+  const handlePointerMove = (e) => {
+    lastEvtRef.current = e;
+    if (rafMoveRef.current) return;
+    rafMoveRef.current = requestAnimationFrame(() => {
+      rafMoveRef.current = 0;
+      if (lastEvtRef.current) applyPointer(lastEvtRef.current);
+    });
+  };
+
+  const buildMissingBoth = loSrc === dummyImg && hiSrc === dummyImg;
+  const runtimeFailedBoth =
+    (loSrc === dummyImg || loError) && (hiSrc === dummyImg || hiError);
+  const showDummy = buildMissingBoth || runtimeFailedBoth;
+
+  const showSkeleton =
+    activated &&
+    !showDummy &&
+    !hiDecoded &&
+    !(loLoaded && !loError) &&
+    !(hiError && loLoaded && !loError);
 
   return (
     <div
       ref={cardRef}
       onMouseMove={handlePointerMove}
       className={`team-card ${size === "large" ? "team-card-large" : ""} ${
-        cardVisible ? "card-visible" : "card-hidden"
+        activated ? "card-visible" : "card-hidden"
       }`}
     >
       <div className="electric-container">
@@ -133,13 +232,54 @@ const TeamCard = ({ member, size = "normal", preload = false }) => {
 
       <div className="card-content-wrapper">
         <div className="card-image-box">
-          <img
-            ref={imgRef}
-            src={imgSrc}
-            alt={member.name}
-            className={`card-img ${!imgLoaded ? "loading" : "loaded"}`}
-            loading="lazy"
-          />
+          {showSkeleton && (
+            <div className="card-skeleton-wrapper" aria-hidden="true">
+              <div className="card-skeleton"></div>
+            </div>
+          )}
+
+          {activated && !showDummy && (
+            <>
+              {loSrc !== dummyImg && !loError && (
+                <img
+                  src={loSrc}
+                  alt=""
+                  aria-hidden="true"
+                  className="card-img card-img-lo"
+                  loading={isPriority ? "eager" : "lazy"}
+                  fetchpriority={isPriority ? "high" : "auto"}
+                  decoding="async"
+                  onLoad={() => setLoLoaded(true)}
+                  onError={() => setLoError(true)}
+                />
+              )}
+
+              {hiSrc !== dummyImg && !hiError && (
+                <img
+                  src={hiSrc}
+                  alt={member.name}
+                  className={`card-img card-img-hi ${
+                    hiDecoded ? "is-loaded" : ""
+                  }`}
+                  loading={isPriority ? "eager" : "lazy"}
+                  fetchpriority={isPriority ? "high" : "auto"}
+                  decoding="async"
+                  onError={() => setHiError(true)}
+                />
+              )}
+            </>
+          )}
+
+          {activated && showDummy && (
+            <img
+              src={dummyImg}
+              alt={member.name}
+              className="card-img card-img-hi is-loaded"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+
           <div className="card-gradient-overlay"></div>
         </div>
 
@@ -176,160 +316,182 @@ export default function TeamPage() {
     website: [],
     designers: [],
   });
-  const [loading, setLoading] = useState(true);
+  const [dataReady, setDataReady] = useState(false);
+
+  const [particles] = useState(() => {
+    const count = 10;
+    return Array.from({ length: count }, () => ({
+      left: `${Math.random() * 100}%`,
+      animationDelay: `${Math.random() * 5}s`,
+      animationDuration: `${16 + Math.random() * 10}s`,
+    }));
+  });
 
   useEffect(() => {
-    fetch(teamDataCSV)
-      .then((response) => response.text())
+    const controller = new AbortController();
+
+    fetch(teamDataCSV, { signal: controller.signal })
+      .then((r) => r.text())
       .then((csvText) => {
         Papa.parse(csvText, {
           header: true,
           skipEmptyLines: true,
           complete: (results) => {
-            const data = results.data;
+            const data = Array.isArray(results.data) ? results.data : [];
 
             const organizers = data
-              .filter((member) => member.Role === "Organizing Committee")
-              .map((member) => ({
-                id: member.Id,
-                name: member.Name1,
-                role: "Organizing Committee",
-                linkedin: member["linkedin profile url"] || "",
-              }));
+              .filter((m) => (m.Role ?? "").trim() === "Organizing Committee")
+              .map((m) => normalizeMember(m, "Organizing Committee"))
+              .filter((m) => m.id && m.name);
 
             const website = data
-              .filter((member) => member.Role === "Website")
-              .map((member) => ({
-                id: member.Id,
-                name: member.Name1,
-                role: "Website",
-                linkedin: member["linkedin profile url"] || "",
-              }));
+              .filter((m) => (m.Role ?? "").trim() === "Website")
+              .map((m) => normalizeMember(m, "Website"))
+              .filter((m) => m.id && m.name);
 
             const designers = data
-              .filter((member) => member.Role === "Design")
-              .map((member) => ({
-                id: member.Id,
-                name: member.Name1,
-                role: "Design",
-                linkedin: member["linkedin profile url"] || "",
-              }));
+              .filter((m) => (m.Role ?? "").trim() === "Design")
+              .map((m) => normalizeMember(m, "Design"))
+              .filter((m) => m.id && m.name);
 
             setTeamData({ organizers, website, designers });
-            setLoading(false);
+            setDataReady(true);
           },
         });
+      })
+      .catch(() => {
+        setTeamData({ organizers: [], website: [], designers: [] });
+        setDataReady(true);
       });
+
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+    if (!dataReady) return;
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      smoothTouch: true,
-    });
-    lenisRef.current = lenis;
+    const allIds = [
+      ...teamData.organizers.map((m) => m.id),
+      ...teamData.website.map((m) => m.id),
+      ...teamData.designers.map((m) => m.id),
+    ];
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+    const hiUrls = allIds.map((id) => getTeamImage(id, "hi"));
+    preloadWithPriority(hiUrls, 8, 4);
+  }, [dataReady, teamData]);
 
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
+  useEffect(() => {
+    if (!dataReady) return;
 
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray(".vertical-divider").forEach((line, i) => {
-        gsap.from(line, {
-          scaleY: 0,
-          duration: 1.5,
-          ease: "power3.out",
-          delay: i * 0.15,
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1201px)", () => {
+      const lenis = new Lenis({
+        duration: 1.1,
+        smooth: true,
+        smoothTouch: false,
+      });
+      lenisRef.current = lenis;
+
+      const tick = (time) => {
+        lenis.raf(time * 1000);
+      };
+
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", ScrollTrigger.update);
+
+      const ctx = gsap.context(() => {
+        gsap.utils.toArray(".vertical-divider").forEach((line, i) => {
+          gsap.from(line, {
+            scaleY: 0,
+            duration: 1.3,
+            ease: "power3.out",
+            delay: i * 0.12,
+          });
         });
-      });
 
-      const gridWrapper = document.querySelector(".team-grid-wrapper");
-      const desktopGrid = document.querySelector(".desktop-grid");
-      const websiteContainer = document.querySelector(
-        ".team-column-left .team-cards-container"
-      );
-      const designersContainer = document.querySelector(
-        ".team-column-right .team-cards-container"
-      );
-      const organizersContainer = document.querySelector(
-        ".team-column-middle .team-cards-container"
-      );
+        const gridWrapper = document.querySelector(".team-grid-wrapper");
+        const desktopGrid = document.querySelector(".desktop-grid");
+        const websiteContainer = document.querySelector(
+          ".team-column-left .team-cards-container"
+        );
+        const designersContainer = document.querySelector(
+          ".team-column-right .team-cards-container"
+        );
+        const organizersContainer = document.querySelector(
+          ".team-column-middle .team-cards-container"
+        );
 
-      if (!gridWrapper || !desktopGrid) return;
+        if (!gridWrapper || !desktopGrid) return;
 
-      const viewportHeight = window.innerHeight;
-      const scrollDistance = 5200;
+        const viewportHeight = window.innerHeight;
+        const scrollDistance = 4500;
 
-      gridWrapper.style.minHeight = `${viewportHeight + scrollDistance}px`;
+        gridWrapper.style.minHeight = `${viewportHeight + scrollDistance}px`;
 
-      ScrollTrigger.create({
-        trigger: gridWrapper,
-        start: "top top",
-        end: `+=${scrollDistance}`,
-        pin: desktopGrid,
-        pinSpacing: true,
-      });
-
-      gsap.to(websiteContainer, {
-        y: -1800,
-        ease: "none",
-        scrollTrigger: {
+        ScrollTrigger.create({
           trigger: gridWrapper,
           start: "top top",
           end: `+=${scrollDistance}`,
-          scrub: 1.5,
-        },
+          pin: desktopGrid,
+          pinSpacing: true,
+        });
+
+        if (websiteContainer) {
+          gsap.to(websiteContainer, {
+            y: -1800,
+            ease: "none",
+            scrollTrigger: {
+              trigger: gridWrapper,
+              start: "top top",
+              end: `+=${scrollDistance}`,
+              scrub: 1.5,
+            },
+          });
+        }
+
+        if (designersContainer) {
+          gsap.to(designersContainer, {
+            y: -2700,
+            ease: "none",
+            scrollTrigger: {
+              trigger: gridWrapper,
+              start: "top top",
+              end: `+=${scrollDistance}`,
+              scrub: 1.2,
+            },
+          });
+        }
+
+        if (organizersContainer) {
+          gsap.to(organizersContainer, {
+            y: -5200,
+            ease: "none",
+            scrollTrigger: {
+              trigger: gridWrapper,
+              start: "top top",
+              end: `+=${scrollDistance}`,
+              scrub: 1,
+            },
+          });
+        }
+
+        ScrollTrigger.refresh();
       });
 
-      gsap.to(designersContainer, {
-        y: -2700,
-        ease: "none",
-        scrollTrigger: {
-          trigger: gridWrapper,
-          start: "top top",
-          end: `+=${scrollDistance}`,
-          scrub: 1.2,
-        },
-      });
-
-      gsap.to(organizersContainer, {
-        y: -5000,
-        ease: "none",
-        scrollTrigger: {
-          trigger: gridWrapper,
-          start: "top top",
-          end: `+=${scrollDistance}`,
-          scrub: 1,
-        },
-      });
-
-      ScrollTrigger.refresh();
+      return () => {
+        ctx.revert();
+        lenis.destroy();
+        gsap.ticker.remove(tick);
+        ScrollTrigger.getAll().forEach((t) => t.kill());
+      };
     });
 
     return () => {
-      ctx.revert();
-      lenis.destroy();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      mm.revert();
     };
-  }, [loading]);
-
-  if (loading) {
-    return (
-      <div className="relative min-h-screen w-full flex items-center justify-center">
-        <div className="text-2xl text-[#001148] font-bold">Loading team...</div>
-      </div>
-    );
-  }
+  }, [dataReady]);
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
@@ -340,8 +502,10 @@ export default function TeamPage() {
           src={oceanBg}
           alt="Ocean Background"
           className="w-full h-full object-cover brightness-125"
+          loading="eager"
+          fetchpriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#b3d9e8]/20 via-[#4a9ec1]/10 to-[#1a5c7a]/40"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-[#b3d9e8]/20 via-[#4a9ec1]/10 to-[#1a5c7a]/40"></div>
         <div className="light-rays">
           <div className="light-ray ray-1"></div>
           <div className="light-ray ray-2"></div>
@@ -350,14 +514,14 @@ export default function TeamPage() {
       </div>
 
       <div className="fixed inset-0 z-1 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p, i) => (
           <div
             key={i}
             className="particle"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${15 + Math.random() * 10}s`,
+              left: p.left,
+              animationDelay: p.animationDelay,
+              animationDuration: p.animationDuration,
             }}
           />
         ))}
@@ -365,24 +529,25 @@ export default function TeamPage() {
 
       <div className="relative z-10">
         <button
-  onClick={() => window.history.back()}
-  className="back-button"
-  aria-label="Go back"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="back-button-icon"
-  >
-    <path d="m12 19-7-7 7-7"></path>
-    <path d="M19 12H5"></path>
-  </svg>
-</button>
+          onClick={() => window.history.back()}
+          className="back-button"
+          aria-label="Go back"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="back-button-icon"
+          >
+            <path d="m12 19-7-7 7-7"></path>
+            <path d="M19 12H5"></path>
+          </svg>
+        </button>
+
         <header className="team-header-static">
           <h1 className="main-title">MEET OUR TEAM</h1>
           <div className="title-underline"></div>
@@ -398,7 +563,7 @@ export default function TeamPage() {
                   <TeamCard
                     key={member.id}
                     member={member}
-                    preload={index < 2}
+                    isPriority={index < 3}
                   />
                 ))}
               </div>
@@ -413,7 +578,7 @@ export default function TeamPage() {
                     key={member.id}
                     member={member}
                     size="large"
-                    preload={index < 2}
+                    isPriority={index < 3}
                   />
                 ))}
               </div>
@@ -427,7 +592,7 @@ export default function TeamPage() {
                   <TeamCard
                     key={member.id}
                     member={member}
-                    preload={index < 2}
+                    isPriority={index < 3}
                   />
                 ))}
               </div>
@@ -440,7 +605,11 @@ export default function TeamPage() {
             <h2 className="mobile-title">ORGANIZERS</h2>
             <div className="mobile-cards">
               {teamData.organizers.map((member, index) => (
-                <TeamCard key={member.id} member={member} preload={index < 2} />
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  isPriority={index < 2}
+                />
               ))}
             </div>
           </section>
@@ -449,7 +618,11 @@ export default function TeamPage() {
             <h2 className="mobile-title">WEBSITE</h2>
             <div className="mobile-cards">
               {teamData.website.map((member, index) => (
-                <TeamCard key={member.id} member={member} preload={index < 2} />
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  isPriority={index < 2}
+                />
               ))}
             </div>
           </section>
@@ -458,7 +631,11 @@ export default function TeamPage() {
             <h2 className="mobile-title">DESIGNERS</h2>
             <div className="mobile-cards">
               {teamData.designers.map((member, index) => (
-                <TeamCard key={member.id} member={member} preload={index < 2} />
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  isPriority={index < 2}
+                />
               ))}
             </div>
           </section>

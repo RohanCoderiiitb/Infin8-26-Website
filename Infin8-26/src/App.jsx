@@ -4,7 +4,6 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 const EventPage = lazy(() => import("./pages/Events/EventPage"));
 const TeamsPage = lazy(() => import("./pages/Teams/TeamPage"));
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
-const SponsorsPage = lazy(() => import("./pages/SponsorPage"));
 
 function LoadingPage() {
   return (
@@ -23,7 +22,6 @@ function App() {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/events" element={<EventPage />}></Route>
           <Route path="/teams" element={<TeamsPage />}></Route>
-          <Route path="/sponsors" element={<SponsorsPage />}></Route>
         </Routes>
       </Suspense>
     </BrowserRouter>
