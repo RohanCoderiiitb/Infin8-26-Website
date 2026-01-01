@@ -440,7 +440,7 @@ export default function TeamPage() {
 
         if (websiteContainer) {
           gsap.to(websiteContainer, {
-            y: -1800,
+            y: -2150,
             ease: "none",
             scrollTrigger: {
               trigger: gridWrapper,
