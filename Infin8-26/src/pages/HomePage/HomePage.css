@@ -9,14 +9,49 @@
   overflow-x: hidden;
 }
 
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: url("../../assets/Home/overlay.svg");
+  background-size: cover;
+  background-position: left 40%;
+  background-repeat: no-repeat;
+
+  z-index: 2;              /* ABOVE gif */
+  pointer-events: none;    /* clicks pass through */
+}
+
+.hero-logo-wrapper {
+  position: relative;
+  z-index: 4;
+}
+
+.landing-gif {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 65vh;
+  z-index: 1;
+}
+
 .hero-section {
   position: relative;
   height: 100vh;
-  background-color: #001D80;
+
+  background-color: #0c2c97; /* fallback */
+  background-size: cover;
+  background-position: 30% 40%;
+  background-repeat: no-repeat;
+
   display: flex;
-  flex-direction: column; /*For the timer -- change later*/
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  z-index: 0;
 }
 
 .hero-title {
@@ -26,19 +61,60 @@
   color: black;
 }
 
+.hero-logo-container {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-logo-bg {
+  width: clamp(15rem, 35vw, 30rem);
+  height: auto;
+}
+
+.hero-logo-text {
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  transform: translate(-50%, -50%);
+  width: clamp(10rem, 25vw, 20rem);
+  height: auto;
+  pointer-events: none;
+}
+
+.hero-left-logo {
+  position: absolute;
+  top: 2rem;
+  left: 10rem;
+  width: 50rem;
+  height: auto;
+  z-index: 4;
+  pointer-events: none;
+}
+
 .hamburger-btn {
   position: absolute;
   top: 1.5rem;
-  right: 1.5rem;
+  left: 1.5rem;
   background: none;
   border: none;
   cursor: pointer;
+  color: white;
+  z-index: 10;
+}
+
+.landing-gif {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 65vh;
+  z-index: 1;
 }
 
 .sidebar {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   width: 320px;
   height: 100vh;
   background: linear-gradient(to bottom, #0f172a, #020617);

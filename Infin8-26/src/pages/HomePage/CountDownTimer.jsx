@@ -1,56 +1,69 @@
-import React from 'react'
 import { useEffect, useState } from "react";
-import "./HomePage.css";
+import "./CountDownTimer.css";
 
 const TARGET_DATE = new Date("2026-01-30T00:00:00");
 
-function CountDownTimer() {
-  const calculateTimeLeft = () => {
+export default function CountDownTimer() {
+  const getTimeLeft = () => {
     const diff = TARGET_DATE - new Date();
-    if (diff <= 0) return null;
+    if (diff <= 0) {
+      return { d: "00", h: "00", m: "00", s: "00" };
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
     return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
+      d: String(days).padStart(2, "0"),
+      h: String(hours).padStart(2, "0"),
+      m: String(minutes).padStart(2, "0"),
+      s: String(seconds).padStart(2, "0"),
     };
   };
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  const [time, setTime] = useState(getTimeLeft());
+
   useEffect(() => {
     const timer = setInterval(() => {
-      const updated = calculateTimeLeft();
-      setTimeLeft(updated);
-
-      if(!updated) 
-        clearInterval(timer);
+      setTime(getTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
-  if (!timeLeft) {
-    return <div className="countdown-ended"></div>;
-  }
+  const renderDigits = (value) => (
+    <div className="cd-digits">
+      <div className="cd-box">
+        <span className="cd-digit">{value[0]}</span>
+      </div>
+      <div className="cd-box">
+        <span className="cd-digit">{value[1]}</span>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="countdown">
-      <div className="time-box">
-        <span>{timeLeft.days}</span>
-        <small>DAYS</small>
+    <div className="countdown-wrapper">
+      <div className="cd-unit">
+        {renderDigits(time.d)}
+        <span className="cd-label">DAYS</span>
       </div>
-      <div className="time-box">
-        <span>{timeLeft.hours}</span>
-        <small>HRS</small>
+
+      <div className="cd-unit">
+        {renderDigits(time.h)}
+        <span className="cd-label">HOURS</span>
       </div>
-      <div className="time-box">
-        <span>{timeLeft.minutes}</span>
-        <small>MINS</small>
+
+      <div className="cd-unit">
+        {renderDigits(time.m)}
+        <span className="cd-label">MINUTES</span>
       </div>
-      <div className="time-box">
-        <span>{timeLeft.seconds}</span>
-        <small>SECS</small>
+
+      <div className="cd-unit">
+        {renderDigits(time.s)}
+        <span className="cd-label">SECONDS</span>
       </div>
     </div>
   );
 }
-export default CountDownTimer
