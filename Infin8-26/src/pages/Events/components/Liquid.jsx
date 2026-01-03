@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import tealBgImg from "../../../assets/events_parallax/1.png";
 
 export default function LiquidBackground() {
@@ -57,7 +57,8 @@ export default function LiquidBackground() {
     let lastY = 0;
 
     const handleMouseMove = (e) => {
-      if (!appRef.current) return;
+      if (!appRef.current || typeof appRef.current.addDrop !== "function")
+        return;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       const speed = Math.sqrt(dx * dx + dy * dy);
@@ -77,7 +78,11 @@ export default function LiquidBackground() {
     };
 
     const ambientInterval = setInterval(() => {
-      if (appRef.current && Math.random() > 0.6) {
+      if (
+        appRef.current &&
+        typeof appRef.current.addDrop === "function" &&
+        Math.random() > 0.6
+      ) {
         const x = Math.random() * 2 - 1;
         const y = Math.random() * 2 - 1;
         appRef.current.addDrop(x, y, 0.08, 0.02);

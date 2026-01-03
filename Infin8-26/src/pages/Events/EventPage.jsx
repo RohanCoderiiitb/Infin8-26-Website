@@ -1,111 +1,22 @@
-import React, { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { gsap } from "gsap";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import baseBgImg from "../../assets/events_parallax/1.png";
 import surfaceImg from "../../assets/events_parallax/3.png";
 import sandImg from "../../assets/events_parallax/7.png";
-import defaultEventCard from "../../assets/Event_card.png";
-
-import eventsData from "../../data/events.json";
 
 import "./EventPage.css";
+import { useEvents } from "./hooks/useEvents";
 
-const EventModal = ({ event, onClose }) => {
-  if (!event) return null;
+import EventModal from "./components/EventModal";
+import EventPosterCard from "./components/EventPosterCard";
 
-  const posterSrc = event.poster ? event.poster : defaultEventCard;
-
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose}>
-          ×
-        </button>
-
-        <div className="modal-layout">
-          <div className="modal-left">
-            <div className="modal-poster-wrapper">
-              <img src={posterSrc} alt={event.title} />
-            </div>
-          </div>
-
-          <div className="modal-right">
-            <h2 className="modal-title">{event.title}</h2>
-
-            <div className="modal-info-grid">
-              <div className="info-item">
-                <span className="label">Date</span>
-                <span className="value">{event.date}</span>
-              </div>
-              <div className="info-item">
-                <span className="label">Time</span>
-                <span className="value">{event.time}</span>
-              </div>
-              {event.fee && (
-                <div className="info-item">
-                  <span className="label">Entry Fee</span>
-                  <span className="value">{event.fee}</span>
-                </div>
-              )}
-            </div>
-
-            <div className="modal-prize-box">
-              <span className="prize-label">PRIZE POOL</span>
-              <span className="prize-value">{event.prize}</span>
-            </div>
-
-            <div className="modal-description">
-              <p>{event.description}</p>
-            </div>
-
-            <div className="modal-contacts">
-              <span className="contact-title">Contact:</span>
-              <div className="contact-list">
-                {event.coordinators &&
-                  event.coordinators.map((coord, idx) => (
-                    <div key={idx} className="contact-person">
-                      {coord.name} ({coord.phone})
-                    </div>
-                  ))}
-              </div>
-            </div>
-
-            <div className="modal-actions">
-              <a
-                href={event.regLink}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Register Now
-              </a>
-              <a
-                href={event.rulebook}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-secondary"
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Rulebook
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+const DAYS_DATA = [
+  { id: 1, date: "JAN 30" },
+  { id: 2, date: "JAN 31" },
+  { id: 3, date: "FEB 1" },
+];
 
 const LiquidBackground = lazy(() =>
   import("./components/Liquid").catch(() => ({
@@ -119,106 +30,62 @@ const lazyLoadImage = (src) => {
   return img;
 };
 
-const DAYS_DATA = [
-  { id: 1, title: "The Shallows", date: "JAN 30" },
-  { id: 2, title: "The Ruins", date: "JAN 31" },
-  { id: 3, title: "The Abyss", date: "FEB 1" },
-];
-
-const LazyPoster = React.memo(({ src, title, price, onClick }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const wrapperRef = useRef(null);
-
-  useEffect(() => {
-    if (!wrapperRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px", threshold: 0.01 }
-    );
-    observer.observe(wrapperRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isInView) return;
-    const img = new Image();
-    img.src = src;
-    img
-      .decode()
-      .then(() => setIsLoaded(true))
-      .catch(() => setIsLoaded(true));
-  }, [isInView, src]);
-
-  return (
-    <div className="event-card" onClick={onClick}>
-      <div className="poster-image-wrapper" ref={wrapperRef}>
-        {!isLoaded && <div className="poster-skeleton" />}
-        {isLoaded && (
-          <img
-            className="poster-image loaded"
-            src={src}
-            alt={title}
-            loading="lazy"
-            decoding="async"
-          />
-        )}
-      </div>
-      <div className="poster-content">
-        <h3>{title}</h3>
-        <div className="price-tag">{price}</div>
-      </div>
+const EventCardSkeleton = () => (
+  <div className="skeleton-card">
+    <div className="skeleton-shimmer" />
+    <div className="skeleton-content-box">
+      <div className="skeleton-text skeleton-title" />
+      <div className="skeleton-text skeleton-price" />
     </div>
-  );
-});
-
-LazyPoster.displayName = "LazyPoster";
+  </div>
+);
 
 export default function EventPage() {
-  const scrollContainerRef = useRef(null);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const bgObjectRef = useRef(null);
+  const { events: eventsData, loading: loadingEvents } = useEvents();
+
+  const scrollContainerRef = useRef(null);
   const surfaceRef = useRef(null);
   const ruinsRef = useRef(null);
   const rocksRef = useRef(null);
   const sandRef = useRef(null);
   const plantsRef = useRef(null);
+  const gridRefs = useRef({});
+  const glassRefs = useRef({});
 
-  const [activeDay, setActiveDay] = useState(1);
+  // State
+  const initialDay = parseInt(searchParams.get("day")) || 1;
+  const validDay = [1, 2, 3].includes(initialDay) ? initialDay : 1;
+  const [activeDay, setActiveDay] = useState(validDay);
   const [isFocused, setIsFocused] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
-
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const previousDayRef = useRef(validDay);
 
+  const [tallPlantsImg, setTallPlantsImg] = useState(null);
+  const [ruinsImg, setRuinsImg] = useState(null);
+  const [rocksImg, setRocksImg] = useState(null);
   const scrollTimeoutRef = useRef(null);
   const touchStartRef = useRef(0);
   const raf = useRef(null);
-  const gridRefs = useRef({});
-  const previousDayRef = useRef(1);
 
   useEffect(() => {
     const preloadAssets = async () => {
       try {
-        const [tallPlantsImg, ruinsImg, rocksImg] = await Promise.all([
+        const [tallPlants, ruins, rocks] = await Promise.all([
           import("../../assets/events_parallax/4.png"),
           import("../../assets/events_parallax/5.png"),
           import("../../assets/events_parallax/6.png"),
         ]);
-        lazyLoadImage(tallPlantsImg.default);
-        lazyLoadImage(ruinsImg.default);
-        lazyLoadImage(rocksImg.default);
-
+        lazyLoadImage(tallPlants.default);
+        lazyLoadImage(ruins.default);
+        lazyLoadImage(rocks.default);
         lazyLoadImage(baseBgImg);
-
         setAssetsLoaded(true);
-      } catch (error) {
-        console.warn("Non-critical assets failed to load:", error);
+      } catch {
         setAssetsLoaded(true);
       }
     };
@@ -227,12 +94,39 @@ export default function EventPage() {
   }, []);
 
   useEffect(() => {
+    if (!assetsLoaded) return;
+    Promise.all([
+      import("../../assets/events_parallax/4.png"),
+      import("../../assets/events_parallax/5.png"),
+      import("../../assets/events_parallax/6.png"),
+    ]).then(([plants, ruins, rocks]) => {
+      setTallPlantsImg(plants.default);
+      setRuinsImg(ruins.default);
+      setRocksImg(rocks.default);
+    });
+  }, [assetsLoaded]);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current) return;
+    const targetDay = validDay;
+    const scrollLeft = (targetDay - 1) * window.innerWidth;
+    scrollContainerRef.current.scrollLeft = scrollLeft;
+    const timer = setTimeout(() => {
+      if (scrollContainerRef.current)
+        scrollContainerRef.current.scrollLeft = scrollLeft;
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [validDay]);
+
+  useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
     let ticking = false;
+    const easeOpacity = (t) => Math.pow(t, 1.3);
 
     const updateParallax = () => {
       const scrollX = container.scrollLeft;
+      const vw = window.innerWidth || document.documentElement.clientWidth;
 
       gsap.set(surfaceRef.current, { backgroundPositionX: -scrollX * 0.1 });
 
@@ -243,6 +137,19 @@ export default function EventPage() {
         gsap.set(sandRef.current, { x: foregroundMove });
         gsap.set(plantsRef.current, { x: foregroundMove });
       }
+
+      const panels = document.querySelectorAll(".day-panel");
+      panels.forEach((panel) => {
+        const day = Number(panel.dataset.day || 0);
+        const centerX = (day - 1) * vw + vw / 2;
+        const dx = Math.abs(scrollX + vw / 2 - centerX);
+        const normalized = Math.min(1, dx / (vw * 0.5));
+        const visibleFactor = 1 - normalized;
+        const opacity = Math.max(0, easeOpacity(visibleFactor));
+        const yShift = (1 - visibleFactor) * 8;
+        const glass = panel.querySelector(".day-banner-glass");
+        if (glass) gsap.set(glass, { opacity, y: yShift });
+      });
       ticking = false;
     };
 
@@ -263,20 +170,19 @@ export default function EventPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const newDay = Number(entry.target.getAttribute("data-day"));
-            if (newDay !== previousDayRef.current) {
-              const prevGrid = gridRefs.current[previousDayRef.current];
-              if (prevGrid) prevGrid.scrollTop = 0;
-              const currentGrid = gridRefs.current[newDay];
-              if (currentGrid) currentGrid.scrollTop = 0;
-              setIsFocused(false);
-              previousDayRef.current = newDay;
-            }
-            setActiveDay(newDay);
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const newDay = Number(entry.target.getAttribute("data-day"));
+          if (newDay !== previousDayRef.current) {
+            const prevGrid = gridRefs.current[previousDayRef.current];
+            if (prevGrid) prevGrid.scrollTop = 0;
+            const currentGrid = gridRefs.current[newDay];
+            if (currentGrid) currentGrid.scrollTop = 0;
+            setIsFocused(false);
+            previousDayRef.current = newDay;
           }
-        });
+          setActiveDay(newDay);
+        }
       },
       { threshold: 0.5 }
     );
@@ -290,23 +196,17 @@ export default function EventPage() {
     const scrollTop = e.target.scrollTop;
     if (scrollTop > 40 && !isFocused) setIsFocused(true);
     if (scrollTop === 0 && isFocused) setIsFocused(false);
-
     if (!isScrolling) setIsScrolling(true);
     if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     scrollTimeoutRef.current = setTimeout(() => setIsScrolling(false), 150);
-  };
-
-  const handleEventClick = (eventData) => {
-    setSelectedEvent(eventData);
   };
 
   const handleWheel = (e, dayId) => {
     if (dayId !== activeDay) return;
     const currentGrid = gridRefs.current[dayId];
     if (!currentGrid) return;
-    if (isFocused && currentGrid.scrollTop === 0 && e.deltaY < -10) {
+    if (isFocused && currentGrid.scrollTop === 0 && e.deltaY < -10)
       setIsFocused(false);
-    }
   };
 
   const handleTouchStart = (e) => {
@@ -319,9 +219,7 @@ export default function EventPage() {
     if (!currentGrid || !isFocused) return;
     const touchY = e.touches[0].clientY;
     const diff = touchY - touchStartRef.current;
-    if (currentGrid.scrollTop === 0 && diff > 30) {
-      setIsFocused(false);
-    }
+    if (currentGrid.scrollTop === 0 && diff > 30) setIsFocused(false);
   };
 
   const scrollToDay = (dayIndex) => {
@@ -336,44 +234,43 @@ export default function EventPage() {
     });
   };
 
-  const [tallPlantsImg, setTallPlantsImg] = useState(null);
-  const [ruinsImg, setRuinsImg] = useState(null);
-  const [rocksImg, setRocksImg] = useState(null);
-
-  useEffect(() => {
-    if (!assetsLoaded) return;
-    Promise.all([
-      import("../../assets/events_parallax/4.png"),
-      import("../../assets/events_parallax/5.png"),
-      import("../../assets/events_parallax/6.png"),
-    ]).then(([plants, ruins, rocks]) => {
-      setTallPlantsImg(plants.default);
-      setRuinsImg(ruins.default);
-      setRocksImg(rocks.default);
-    });
-  }, [assetsLoaded]);
-
   return (
     <div className="events-page-wrapper">
+      <button
+        onClick={() => navigate("/")}
+        className="events-back-button"
+        aria-label="Go back to home"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          className="events-back-icon"
+        >
+          <path d="m12 19-7-7 7-7" />
+          <path d="M19 12H5" />
+        </svg>
+      </button>
+
       <div className="parallax-background">
         <div className="layer-bg layer-bg-fallback" />
-
         <div className="parallax-layer layer-base">
           <img src={baseBgImg} alt="" loading="eager" />
         </div>
-
         <Suspense fallback={null}>
           <LiquidBackground />
         </Suspense>
-
         <div
           className="parallax-layer layer-surface"
           ref={surfaceRef}
           style={{ backgroundImage: `url(${surfaceImg})` }}
         />
-
         <div className="parallax-layer layer-sand" ref={sandRef}>
-          <img src={sandImg} alt="" loading="eager" fetchpriority="high" />
+          <img src={sandImg} alt="" loading="eager" fetchPriority="high" />
           {assetsLoaded && (
             <>
               <img src={sandImg} alt="" loading="lazy" />
@@ -381,19 +278,16 @@ export default function EventPage() {
             </>
           )}
         </div>
-
         {assetsLoaded && ruinsImg && (
           <div className="parallax-layer layer-ruins" ref={ruinsRef}>
             <img src={ruinsImg} alt="" loading="lazy" decoding="async" />
           </div>
         )}
-
         {assetsLoaded && rocksImg && (
           <div className="parallax-layer layer-rocks" ref={rocksRef}>
             <img src={rocksImg} alt="" loading="lazy" decoding="async" />
           </div>
         )}
-
         {assetsLoaded && tallPlantsImg && (
           <div className="parallax-layer layer-plants" ref={plantsRef}>
             <img
@@ -443,6 +337,7 @@ export default function EventPage() {
               data-day={day.id}
             >
               <div
+                ref={(el) => (glassRefs.current[day.id] = el)}
                 className={`day-banner-glass ${
                   isFocused ? "glass-expanded" : ""
                 }`}
@@ -455,14 +350,16 @@ export default function EventPage() {
                   onTouchStart={handleTouchStart}
                   onTouchMove={(e) => handleTouchMove(e, day.id)}
                 >
-                  {dayEvents.length > 0 ? (
+                  {loadingEvents ? (
+                    [...Array(6)].map((_, i) => <EventCardSkeleton key={i} />)
+                  ) : dayEvents.length > 0 ? (
                     dayEvents.map((event) => (
-                      <LazyPoster
+                      <EventPosterCard
                         key={event.id}
-                        src={event.poster ? event.poster : defaultEventCard}
+                        src={event.poster}
                         title={event.title}
                         price={`Prize: ${event.prize}`}
-                        onClick={() => handleEventClick(event)}
+                        onClick={() => setSelectedEvent(event)}
                       />
                     ))
                   ) : (
