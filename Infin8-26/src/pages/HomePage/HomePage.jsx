@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FaqSection from "../../components/FaqSection/FaqSection";
 import { FaTwitter, FaInstagram, FaFacebook, FaLinkedin } from "react-icons/fa";
-import infin8logo from "../../assets/footer/infin8-logo.png";
+import infin8logo from "../../assets/Footer/infin8-logo.png";
 import footerbg from "../../assets/footer/footer-bg.png";
 import shell1 from "../../assets/footer/shell1.png";
 import shell2 from "../../assets/footer/shell2.png";
