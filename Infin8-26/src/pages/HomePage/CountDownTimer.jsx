@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import "./CountDownTimer.css";
 
 const TARGET_DATE = new Date("2026-01-30T00:00:00");
@@ -44,7 +45,13 @@ export default function CountDownTimer() {
   );
 
   return (
-    <div className="countdown-wrapper">
+    <motion.div
+      className="countdown-wrapper"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+    >
+
       <div className="cd-unit">
         {renderDigits(time.d)}
         <span className="cd-label">DAYS</span>
@@ -64,6 +71,6 @@ export default function CountDownTimer() {
         {renderDigits(time.s)}
         <span className="cd-label">SECONDS</span>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -53,7 +53,18 @@ export default function HomePage() {
   return (
     <div className="home-wrapper">
       <section className="hero-section">
-        <img src={logo} alt="logo" className="hero-left-logo" />
+        <motion.img
+          src={logo}
+          alt="logo"
+          className="hero-left-logo"
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{
+            duration: 0.9,
+            ease: "easeOut",
+          }}
+        />
+
         <CountDownTimer />
 
         <button onClick={() => setOpen(true)} className="hamburger-btn">
