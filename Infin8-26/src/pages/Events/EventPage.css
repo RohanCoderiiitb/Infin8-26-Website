@@ -148,7 +148,7 @@ html {
   width: 150vw;
 }
 .layer-sand img {
-  width: 100vw;
+  width: 110vw;
   height: auto;
   margin-bottom: -2px;
   filter: brightness(1);
@@ -301,6 +301,8 @@ html {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: none;
+  scroll-behavior: smooth;
 }
 .horizontal-scroll-wrapper::-webkit-scrollbar {
   display: none;
@@ -961,7 +963,7 @@ html {
 }
 
 /* ================= MOBILE LAYOUT ================= */
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .plant-left {
     height: 100%;
     bottom: -20vh;
@@ -993,104 +995,84 @@ html {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .day-banner-glass {
-    width: 94vw;
-    padding: 12px;
-    height: 70vh;
-    border-radius: 16px;
+    width: 92vw !important;
+    height: 75vh !important;
+    padding: 15px !important;
+    border-radius: 20px;
+
+    transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+      height 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+      background 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .events-header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    background: transparent;
+  }
+
+  .day-panel {
+    padding-top: 20px !important;
+    justify-content: flex-start;
   }
 
   .events-grid {
     grid-template-columns: 1fr;
-    gap: 35px;
-    padding: 10px 4px 100px 4px;
+    gap: 25px;
+    padding: 5px 5px 80px 5px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .event-poster-card {
-    max-width: none;
     width: 100%;
-    margin: 0;
-    aspect-ratio: 2 / 3;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  }
-
-  .events-page-wrapper .poster-content {
-    min-height: 90px;
-    padding: 16px;
-  }
-
-  .events-page-wrapper .event-poster-card h3 {
-    font-size: 1.4rem;
-    line-height: 1.2;
-  }
-
-  .events-page-wrapper .price-tag {
-    font-size: 1.1rem;
-    margin-top: 4px;
+    aspect-ratio: 2/3;
+    max-width: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   }
 
   .plant-left {
-    height: 90%;
-    bottom: -20vh;
-    max-width: none;
+    display: none;
   }
-  .layer-ruins img {
-    min-width: 0;
-    width: 140vw;
-    max-width: none;
-  }
-  .layer-ruins {
-    padding-bottom: 0;
-    width: 130vw;
-    bottom: 4vh;
-  }
+
+  .layer-ruins img,
   .layer-rocks img {
-    width: 140vw;
-    min-width: 0;
-    margin-right: -30vw;
-  }
-  .layer-rocks {
-    justify-content: flex-end;
-    padding-bottom: 0;
-    width: 130vw;
-    bottom: 3vh;
-  }
-  .layer-sand img {
-    width: 180vw;
+    width: 120vw;
+    scale: 200%;
     max-width: none;
+    transform: none !important;
+  }
+
+  .layer-ruins,
+  .layer-rocks {
+    padding-bottom: 0;
+    bottom: 10vh;
+    width: 120vw;
+  }
+
+  .layer-sand img {
+    width: 150vw;
+    transform: none !important;
   }
 
   .modal-layout {
     flex-direction: column;
     height: auto;
-    max-height: 85vh;
+    max-height: 80vh;
   }
 
-  .modal-left {
-    flex: 0 0 auto;
-    height: auto;
-    max-height: 40vh;
-    width: 100%;
+  .modal-poster-wrapper {
+    height: 250px;
+    flex: none;
   }
 
   .modal-poster-wrapper img {
     object-fit: contain;
-    max-height: 40vh;
-    background: #000;
-  }
-
-  .modal-right {
-    padding: 25px;
-  }
-
-  .modal-title {
-    font-size: 1.5rem;
-  }
-
-  .modal-info-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
   }
 }
 

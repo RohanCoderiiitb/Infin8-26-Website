@@ -7,6 +7,8 @@ const EventPosterCard = React.memo(function EventPosterCard({
   title,
   price,
   onClick,
+  isIIITBExclusive,
+  isAllThreeDays,
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [activated, setActivated] = useState(false);
@@ -90,7 +92,23 @@ const EventPosterCard = React.memo(function EventPosterCard({
           )
         )}
       </div>
+
       <div className="poster-content">
+        {(isIIITBExclusive || isAllThreeDays) && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {isIIITBExclusive && (
+              <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded bg-gradient-to-r from-amber-500 to-yellow-400 text-[#0a1628]">
+                IIITB Only
+              </span>
+            )}
+            {isAllThreeDays && (
+              <span className="px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded bg-gradient-to-r from-cyan-500 to-blue-400 text-white">
+                All 3 Days
+              </span>
+            )}
+          </div>
+        )}
+
         <h3>{title}</h3>
         <div className="price-tag">{price}</div>
       </div>

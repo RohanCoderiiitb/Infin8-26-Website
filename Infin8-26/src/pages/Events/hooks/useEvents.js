@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const CACHE_KEY = "event_data_cache_v1";
+const CACHE_KEY = "event_data_cache_v2";
 const CACHE_DURATION = 5 * 60 * 1000;
 const SPREADSHEET_ID = "1ReGxPjOiaAI_731HY4NSStOILBBwp2TSyvX_Wat9wek";
 const SHEET_NAME = "Sheet1";
@@ -20,37 +20,39 @@ const getGoogleDriveImage = (url) => {
   return url;
 };
 
+const parseBoolean = (value) => {
+  if (!value) return false;
+  const normalized = String(value).toLowerCase().trim();
+  return normalized === "yes" || normalized === "true" || normalized === "1";
+};
+
 export function useEvents() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadEvents = async () => {
+    const fetchData = async () => {
       try {
         const cached = localStorage.getItem(CACHE_KEY);
         if (cached) {
-          const parsed = JSON.parse(cached);
-          const age = Date.now() - parsed.timestamp;
-
-          if (age < CACHE_DURATION) {
-            setData(parsed.data);
+          const { timestamp, data: cachedData } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setData(cachedData);
             setLoading(false);
             return;
           }
         }
 
-        const response = await fetch(
-          `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}&_t=${Date.now()}`,
-          { cache: "no-store" }
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        const jsonText = text.match(
+          /google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/
         );
+        if (!jsonText) throw new Error("Failed to parse response");
 
-        if (!response.ok) throw new Error("Failed to fetch from Google");
-
-        const text = await response.text();
-        const jsonString = text.substring(47).slice(0, -2);
-        const json = JSON.parse(jsonString);
-
+        const json = JSON.parse(jsonText[1]);
         const cols = json.table.cols.map((col) => col.label);
         const formattedData = json.table.rows.map((row) => {
           const item = {};
@@ -66,6 +68,8 @@ export function useEvents() {
             id: Number(item.id),
             day: Number(item.day),
             poster: getGoogleDriveImage(item.poster),
+            isIIITBExclusive: parseBoolean(item["IIITB Exclusive?"]),
+            isAllThreeDays: parseBoolean(item["All 3 days?"]),
             coordinators: [
               { name: item.coord1Name, phone: String(item.coord1Phone) },
               { name: item.coord2Name, phone: String(item.coord2Phone) },
@@ -83,14 +87,14 @@ export function useEvents() {
 
         setData(formattedData);
       } catch (err) {
-        console.error(err);
-        setError(err);
+        console.error("Error fetching events:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    loadEvents();
+    fetchData();
   }, []);
 
   return { events: data, loading, error };

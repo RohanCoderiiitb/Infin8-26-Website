@@ -2,8 +2,29 @@ import { useState } from "react";
 import DefaultEventPoster from "./DefaultEventPoster";
 import modalBgPattern from "../../../assets/events_page/model_card.jpg";
 
+const isGoogleForm = (url) => {
+  if (!url) return false;
+  return url.includes("docs.google.com/forms") || url.includes("forms.gle");
+};
+
+const getEmbeddableFormUrl = (url) => {
+  if (!url) return "";
+  if (url.includes("/viewform?embedded=true")) return url;
+  if (url.includes("forms.gle"))
+    return (
+      url.replace("forms.gle", "docs.google.com/forms/d/e") +
+      "/viewform?embedded=true"
+    );
+  if (url.includes("/viewform")) {
+    return url.replace("/viewform", "/viewform?embedded=true");
+  }
+  return url + (url.includes("?") ? "&embedded=true" : "?embedded=true");
+};
+
 export default function EventModal({ event, onClose }) {
   const [failedPosterUrl, setFailedPosterUrl] = useState(null);
+  const [showEmbeddedForm, setShowEmbeddedForm] = useState(false);
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
 
   if (!event) return null;
 
@@ -14,6 +35,99 @@ export default function EventModal({ event, onClose }) {
     event.poster === "posters/image.png" ||
     event.poster === "" ||
     isImageError;
+
+  const canEmbedForm = isGoogleForm(event.regLink);
+
+  if (showEmbeddedForm && canEmbedForm) {
+    return (
+      <div
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-3 md:p-6"
+        onClick={() => setShowEmbeddedForm(false)}
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(0, 20, 50, 0.95) 0%, rgba(0, 5, 15, 0.98) 100%)",
+          backdropFilter: "blur(12px)",
+        }}
+      >
+        <div
+          className="relative w-full max-w-[900px] h-[90vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: "linear-gradient(145deg, #0a1628 0%, #0d2137 100%)",
+            border: "2px solid rgba(255, 215, 0, 0.3)",
+          }}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-[rgba(255,215,0,0.2)] bg-[rgba(0,20,40,0.9)] z-10">
+            <h3
+              className="text-base md:text-lg font-bold text-white truncate pr-4"
+              style={{ fontFamily: '"Cinzel", serif' }}
+            >
+              Register: <span className="text-yellow-400">{event.title}</span>
+            </h3>
+
+            <div className="flex gap-2 shrink-0">
+              <a
+                href={event.regLink}
+                target="_blank"
+                rel="noreferrer"
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-[rgba(100,200,255,0.1)] border border-[rgba(100,200,255,0.3)] hover:bg-[rgba(100,200,255,0.2)] transition-all"
+                title="Open in new tab"
+              >
+                <svg
+                  className="w-4 h-4 text-cyan-300"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+
+              <button
+                onClick={() => setShowEmbeddedForm(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center bg-[rgba(255,215,0,0.15)] border border-[rgba(255,215,0,0.4)] hover:rotate-90 transition-all duration-300"
+              >
+                <svg
+                  className="w-4 h-4 text-yellow-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="relative flex-1 bg-white w-full">
+            {!isIframeLoaded && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a1628] z-0">
+                <div className="w-10 h-10 border-4 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin mb-4"></div>
+                <p className="text-yellow-400/80 text-sm font-cinzel tracking-widest animate-pulse">
+                  LOADING FORM...
+                </p>
+              </div>
+            )}
+
+            <iframe
+              src={getEmbeddableFormUrl(event.regLink)}
+              className={`w-full h-full border-0 transition-opacity duration-500 ${
+                isIframeLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              title={`Registration form for ${event.title}`}
+              loading="lazy"
+              onLoad={() => setIsIframeLoaded(true)}
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -240,22 +354,40 @@ export default function EventModal({ event, onClose }) {
           </div>
 
           <div className="relative z-10 h-full overflow-y-auto custom-scrollbar flex flex-col gap-4 md:gap-5 p-4 pb-10 md:p-6 lg:p-10">
-            <h2
-              className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-wider m-0 pt-2"
-              style={{
-                fontFamily: '"Cinzel", serif',
-                textShadow:
-                  "0 0 30px rgba(255, 215, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.5)",
-              }}
-            >
-              {event.title}
+            <div>
+              <h2
+                className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-wider m-0 pt-2"
+                style={{
+                  fontFamily: '"Cinzel", serif',
+                  textShadow:
+                    "0 0 30px rgba(255, 215, 0, 0.25), 0 4px 15px rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                {event.title}
+              </h2>
+
+              {(event.isIIITBExclusive || event.isAllThreeDays) && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {event.isIIITBExclusive && (
+                    <span className="px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-md bg-gradient-to-r from-amber-500/20 to-yellow-400/20 text-yellow-400 border border-yellow-400/40">
+                      🎓 IIITB Exclusive
+                    </span>
+                  )}
+                  {event.isAllThreeDays && (
+                    <span className="px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider rounded-md bg-gradient-to-r from-cyan-500/20 to-blue-400/20 text-cyan-400 border border-cyan-400/40">
+                      📅 All 3 Days
+                    </span>
+                  )}
+                </div>
+              )}
+
               <div
                 className="mt-2 md:mt-3 h-1 w-16 md:w-20 rounded"
                 style={{
                   background: "linear-gradient(90deg, #ffd700, transparent)",
                 }}
               />
-            </h2>
+            </div>
 
             <div className="grid grid-cols-2 gap-3 md:gap-4 shrink-0">
               <div className="flex flex-col gap-1 p-3 md:p-4 rounded-xl bg-[rgba(0,40,80,0.5)] border border-[rgba(100,200,255,0.15)] border-l-[3px] border-l-[rgba(255,215,0,0.6)] transition-all duration-300 hover:bg-[rgba(0,50,100,0.6)] hover:border-l-yellow-400">
@@ -345,8 +477,15 @@ export default function EventModal({ event, onClose }) {
             </div>
 
             {event.description && (
-              <div className="p-3 md:p-4 rounded-xl bg-[rgba(0,30,60,0.4)] border border-[rgba(100,200,255,0.1)] shrink-0 w-full">
-                <p className="m-0 text-xs md:text-sm leading-relaxed text-[rgba(200,220,255,0.85)] text-justify whitespace-pre-line break-words">
+              <div
+                className="p-4 md:p-5 rounded-xl shrink-0 w-full"
+                style={{
+                  background: "rgba(0, 20, 40, 0.6)",
+                  border: "1px solid rgba(255, 215, 0, 0.2)",
+                  boxShadow: "inset 0 0 20px rgba(0,0,0,0.3)",
+                }}
+              >
+                <p className="m-0 text-sm md:text-base leading-7 text-gray-100 text-justify whitespace-pre-line break-words font-medium">
                   {event.description}
                 </p>
               </div>
@@ -354,7 +493,7 @@ export default function EventModal({ event, onClose }) {
 
             <div className="pt-3 md:pt-4 border-t border-[rgba(100,200,255,0.15)] shrink-0">
               <span
-                className="block mb-2 md:mb-3 text-xs md:text-sm font-bold text-yellow-400 tracking-widest"
+                className="block mb-2 md:mb-3 text-sm md:text-base font-bold text-yellow-400 tracking-widest"
                 style={{ fontFamily: '"Cinzel", serif' }}
               >
                 Contact:
@@ -363,13 +502,13 @@ export default function EventModal({ event, onClose }) {
                 {event.coordinators?.map((coord, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col gap-0.5 px-3 md:px-4 py-2 md:py-2.5 rounded-lg bg-[rgba(0,40,80,0.5)] border border-[rgba(100,200,255,0.15)]"
+                    className="flex flex-col gap-1 px-3 md:px-4 py-2 md:py-2.5 rounded-lg bg-[rgba(0,40,80,0.5)] border border-[rgba(100,200,255,0.15)]"
                   >
-                    <span className="text-xs md:text-sm font-semibold text-white">
+                    <span className="text-sm md:text-base font-semibold text-white">
                       {coord.name}
                     </span>
                     {coord.phone && (
-                      <span className="text-[10px] md:text-xs text-[rgba(100,200,255,0.7)]">
+                      <span className="text-xs md:text-sm text-[rgba(100,200,255,0.7)]">
                         {coord.phone}
                       </span>
                     )}
@@ -379,30 +518,81 @@ export default function EventModal({ event, onClose }) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-2 md:mt-auto pt-2 md:pt-4 shrink-0 pb-4">
-              <a
-                href={event.regLink}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 md:gap-2.5 py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold uppercase tracking-wider text-[#0a1628] no-underline transition-all duration-300 hover:-translate-y-1 text-sm md:text-base"
-                style={{
-                  fontFamily: '"Cinzel", serif',
-                  background:
-                    "linear-gradient(135deg, #ffd700 0%, #ffaa00 100%)",
-                  boxShadow:
-                    "0 8px 30px rgba(255, 215, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
-                }}
-              >
-                <span>Register Now</span>
-                <svg
-                  className="w-4 h-4 md:w-5 md:h-5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
+              {canEmbedForm ? (
+                <div className="flex-1 flex gap-2">
+                  <button
+                    onClick={() => setShowEmbeddedForm(true)}
+                    className="flex-1 flex items-center justify-center gap-2 md:gap-2.5 py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold uppercase tracking-wider text-[#0a1628] transition-all duration-300 hover:-translate-y-1 text-sm md:text-base cursor-pointer"
+                    style={{
+                      fontFamily: '"Cinzel", serif',
+                      background:
+                        "linear-gradient(135deg, #ffd700 0%, #ffaa00 100%)",
+                      boxShadow:
+                        "0 8px 30px rgba(255, 215, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                    }}
+                  >
+                    <span>Register</span>
+                    <svg
+                      className="w-4 h-4 md:w-5 md:h-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M9 12h6M12 9v6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                    </svg>
+                  </button>
+                  <a
+                    href={event.regLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-center w-12 md:w-14 py-3 md:py-4 rounded-xl font-bold text-[#0a1628] transition-all duration-300 hover:-translate-y-1"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #ffd700 0%, #ffaa00 100%)",
+                      boxShadow:
+                        "0 8px 30px rgba(255, 215, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                    }}
+                    title="Open in new tab"
+                  >
+                    <svg
+                      className="w-4 h-4 md:w-5 md:h-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                    </svg>
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href={event.regLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 md:gap-2.5 py-3 md:py-4 px-4 md:px-6 rounded-xl font-bold uppercase tracking-wider text-[#0a1628] no-underline transition-all duration-300 hover:-translate-y-1 text-sm md:text-base"
+                  style={{
+                    fontFamily: '"Cinzel", serif',
+                    background:
+                      "linear-gradient(135deg, #ffd700 0%, #ffaa00 100%)",
+                    boxShadow:
+                      "0 8px 30px rgba(255, 215, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                  }}
                 >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </a>
+                  <span>Register Now</span>
+                  <svg
+                    className="w-4 h-4 md:w-5 md:h-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </a>
+              )}
+
               <a
                 href={event.rulebook}
                 target="_blank"

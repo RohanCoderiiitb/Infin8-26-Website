@@ -55,7 +55,6 @@ export default function EventPage() {
   const gridRefs = useRef({});
   const glassRefs = useRef({});
 
-  // State
   const initialDay = parseInt(searchParams.get("day")) || 1;
   const validDay = [1, 2, 3].includes(initialDay) ? initialDay : 1;
   const [activeDay, setActiveDay] = useState(validDay);
@@ -63,6 +62,7 @@ export default function EventPage() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const previousDayRef = useRef(validDay);
 
   const [tallPlantsImg, setTallPlantsImg] = useState(null);
@@ -71,6 +71,13 @@ export default function EventPage() {
   const scrollTimeoutRef = useRef(null);
   const touchStartRef = useRef(0);
   const raf = useRef(null);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 700);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     const preloadAssets = async () => {
@@ -127,15 +134,18 @@ export default function EventPage() {
     const updateParallax = () => {
       const scrollX = container.scrollLeft;
       const vw = window.innerWidth || document.documentElement.clientWidth;
+      const mobile = vw < 700;
 
-      gsap.set(surfaceRef.current, { backgroundPositionX: -scrollX * 0.1 });
+      if (!mobile) {
+        gsap.set(surfaceRef.current, { backgroundPositionX: -scrollX * 0.1 });
 
-      if (assetsLoaded) {
-        gsap.set(ruinsRef.current, { x: -scrollX * 0.15 });
-        gsap.set(rocksRef.current, { x: -scrollX * 0.15 });
-        const foregroundMove = -scrollX * 0.6;
-        gsap.set(sandRef.current, { x: foregroundMove });
-        gsap.set(plantsRef.current, { x: foregroundMove });
+        if (assetsLoaded) {
+          gsap.set(ruinsRef.current, { x: -scrollX * 0.15 });
+          gsap.set(rocksRef.current, { x: -scrollX * 0.15 });
+          const foregroundMove = -scrollX * 0.6;
+          gsap.set(sandRef.current, { x: foregroundMove });
+          gsap.set(plantsRef.current, { x: foregroundMove });
+        }
       }
 
       const panels = document.querySelectorAll(".day-panel");
@@ -143,13 +153,18 @@ export default function EventPage() {
         const day = Number(panel.dataset.day || 0);
         const centerX = (day - 1) * vw + vw / 2;
         const dx = Math.abs(scrollX + vw / 2 - centerX);
-        const normalized = Math.min(1, dx / (vw * 0.5));
+        const normalized = Math.min(1, dx / (vw * 0.6));
         const visibleFactor = 1 - normalized;
         const opacity = Math.max(0, easeOpacity(visibleFactor));
-        const yShift = (1 - visibleFactor) * 8;
+
+        const yShift = (1 - visibleFactor) * (mobile ? 12 : 8);
+
         const glass = panel.querySelector(".day-banner-glass");
-        if (glass) gsap.set(glass, { opacity, y: yShift });
+        if (glass) {
+          gsap.set(glass, { opacity, y: yShift });
+        }
       });
+
       ticking = false;
     };
 
@@ -192,16 +207,21 @@ export default function EventPage() {
   }, []);
 
   const handleGridScroll = (e, dayId) => {
+    if (isMobile) return;
+
     if (dayId !== activeDay) return;
     const scrollTop = e.target.scrollTop;
     if (scrollTop > 40 && !isFocused) setIsFocused(true);
     if (scrollTop === 0 && isFocused) setIsFocused(false);
+
     if (!isScrolling) setIsScrolling(true);
     if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     scrollTimeoutRef.current = setTimeout(() => setIsScrolling(false), 150);
   };
 
   const handleWheel = (e, dayId) => {
+    if (isMobile) return;
+
     if (dayId !== activeDay) return;
     const currentGrid = gridRefs.current[dayId];
     if (!currentGrid) return;
@@ -210,10 +230,13 @@ export default function EventPage() {
   };
 
   const handleTouchStart = (e) => {
+    if (isMobile) return;
     touchStartRef.current = e.touches[0].clientY;
   };
 
   const handleTouchMove = (e, dayId) => {
+    if (isMobile) return;
+
     if (dayId !== activeDay) return;
     const currentGrid = gridRefs.current[dayId];
     if (!currentGrid || !isFocused) return;
@@ -261,9 +284,13 @@ export default function EventPage() {
         <div className="parallax-layer layer-base">
           <img src={baseBgImg} alt="" loading="eager" />
         </div>
-        <Suspense fallback={null}>
-          <LiquidBackground />
-        </Suspense>
+
+        {!isMobile && (
+          <Suspense fallback={null}>
+            <LiquidBackground />
+          </Suspense>
+        )}
+
         <div
           className="parallax-layer layer-surface"
           ref={surfaceRef}
@@ -360,6 +387,8 @@ export default function EventPage() {
                         title={event.title}
                         price={`Prize: ${event.prize}`}
                         onClick={() => setSelectedEvent(event)}
+                        isIIITBExclusive={event.isIIITBExclusive}
+                        isAllThreeDays={event.isAllThreeDays}
                       />
                     ))
                   ) : (
