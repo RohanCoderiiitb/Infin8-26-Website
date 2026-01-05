@@ -1,11 +1,10 @@
 .countdown-wrapper {
-  position: absolute;
-  top: calc(2rem + 30rem);
-  left: 19rem;
+  position: static;           /* REMOVE absolute */
   display: flex;
-  gap: 4rem;
-  z-index: 10;
-  pointer-events: auto;
+  gap: clamp(1rem, 3vw, 4rem);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .cd-unit {
@@ -108,9 +107,6 @@
 @media (max-width: 768px) {
   .countdown-wrapper {
     gap: 2rem;
-    top: 20rem;
-    left: 2rem;
-    transform: scale(0.9);
   }
 
   .cd-box {
