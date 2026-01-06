@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useNavigate } from "react-router-dom";
 import Lenis from "lenis";
 import Papa from "papaparse";
 import "./TeamPage.css";
@@ -316,6 +319,13 @@ export default function TeamPage() {
     website: [],
     designers: [],
   });
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const menuItems = [
+    { label: "Home", path: "/" },
+    { label: "Events", path: "/events" },
+    { label: "Team", path: "/teams" },
+  ];
   const [dataReady, setDataReady] = useState(false);
 
   const [particles] = useState(() => {
@@ -526,27 +536,41 @@ export default function TeamPage() {
           />
         ))}
       </div>
+      <button onClick={() => setOpen(true)} className="team-hamburger-btn">
+          <Menu size={36} />
+      </button>
 
-      <div className="relative z-10">
-        <button
-          onClick={() => window.history.back()}
-          className="back-button"
-          aria-label="Go back"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="back-button-icon"
-          >
-            <path d="m12 19-7-7 7-7"></path>
-            <path d="M19 12H5"></path>
-          </svg>
-        </button>
+        <AnimatePresence>
+          {open && (
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="sidebar"
+            >
+              <button onClick={() => setOpen(false)} className="close-btn">
+                <X size={28} />
+              </button>
+
+              <nav className="sidebar-nav">
+                {menuItems.map((item) => (
+                  <motion.button
+                    key={item.label}
+                    whileHover={{ scale: 1.1, x: -10 }}
+                    className="nav-item"
+                    onClick={() => {
+                        navigate(item.path);
+                        setOpen(false);
+                    }}
+                  >
+                    {item.label.toUpperCase()}
+                  </motion.button>
+                ))}
+              </nav>
+            </motion.aside>
+          )}
+        </AnimatePresence>
 
         <header className="team-header-static">
           <h1 className="main-title">MEET OUR TEAM</h1>
@@ -641,6 +665,5 @@ export default function TeamPage() {
           </section>
         </div>
       </div>
-    </div>
   );
 }

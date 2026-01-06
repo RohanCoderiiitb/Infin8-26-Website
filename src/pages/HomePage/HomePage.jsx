@@ -46,7 +46,6 @@ export default function HomePage() {
     { label: "About", path: "#about" },
     { label: "Events", path: "/events" },
     { label: "Team", path: "/teams" },
-    //{ label: "Sponsors", path: "/sponsors" },
   ];
 
   return (

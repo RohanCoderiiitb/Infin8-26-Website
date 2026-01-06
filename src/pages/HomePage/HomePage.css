@@ -91,6 +91,17 @@
   pointer-events: none;
 }
 
+.team-hamburger-btn{
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #03045e;
+  z-index: 10000;
+}
+
 .hamburger-btn {
   position: absolute;
   top: 1.5rem;
