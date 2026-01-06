@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Legends of the Sea";
   src: url("/fonts/LegendsOfTheSea-Regular.woff2") format("woff2"),
-       url("/fonts/LegendsOfTheSea-Regular.woff") format("woff");
+    url("/fonts/LegendsOfTheSea-Regular.woff") format("woff");
 }
 
 .home-wrapper {
@@ -19,8 +19,8 @@
   background-position: left 40%;
   background-repeat: no-repeat;
 
-  z-index: 2;              /* ABOVE gif */
-  pointer-events: none;    /* clicks pass through */
+  z-index: 2; /* ABOVE gif */
+  pointer-events: none; /* clicks pass through */
 }
 
 .hero-logo-wrapper {
@@ -187,7 +187,7 @@
 }
 
 .event-gif {
-  width: 100%;   
+  width: 100%;
   max-width: 75rem;
   border-radius: 50%;
   height: auto;
@@ -204,8 +204,8 @@
 
 .events-text {
   max-width: 37.5rem;
-  color: #D6E9FF;
-  font-family: 'Imprima', sans-serif;
+  color: #d6e9ff;
+  font-family: "Imprima", sans-serif;
   font-weight: 400;
   font-size: 1.25rem;
   margin-bottom: 3rem;
@@ -217,13 +217,13 @@
 .event-days {
   display: flex;
   gap: 1.25rem;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 .event-card {
-  background: none;   
-  padding: 0;              
-  border-radius: 50%;        
+  background: none;
+  padding: 0;
+  border-radius: 50%;
   width: 7.5rem;
   height: 7.5rem;
   display: flex;
@@ -351,7 +351,6 @@
   }
 }
 
-
 .about-section {
   position: relative;
   align-items: center;
@@ -359,27 +358,26 @@
   padding: 6rem 2rem;
   text-align: center;
 }
-.about-img{
+.about-img {
   position: absolute;
-  top:140px;
-  left:110px;
+  top: 140px;
+  left: 110px;
 }
 
-.about-infin8-img{
+.about-infin8-img {
   position: absolute;
-  top:220px;
-  left:180px;
-
+  top: 220px;
+  left: 180px;
 }
 
-.whale{
+.whale {
   position: absolute;
-  right:80px;
+  right: 80px;
   top: 30px;
   z-index: 0;
 }
 .about-text {
-  position:relative;
+  position: relative;
   align-items: center;
   margin: 0 auto;
   max-width: 650px;
@@ -387,9 +385,9 @@
   text-align: left;
   font-weight: 400;
   font-size: 20px;
-  font-family: 'Imprima',sans-serif;
+  font-family: "Imprima", sans-serif;
   margin: auto;
-  color: #D6E9FF;
+  color: #d6e9ff;
 }
 
 .team-section {
@@ -471,7 +469,7 @@
   display: flex;
   align-items: center;
   position: absolute;
-  font-family: 'Archivo', sans-serif;
+  font-family: "Archivo", sans-serif;
   font-weight: 500;
   color: white;
   font-size: 6.75rem;
@@ -491,7 +489,7 @@
 .get-in-touch {
   font-size: 3.125rem;
   font-weight: 600;
-  font-family: 'Archivo', sans-serif;
+  font-family: "Archivo", sans-serif;
   text-align: center;
   margin: 0 auto 2rem;
 }
@@ -503,9 +501,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  font-family: 'Archivo', sans-serif;
+  font-family: "Archivo", sans-serif;
   font-size: 1.125rem;
-  color: #2A91FB;
+  color: #2a91fb;
   z-index: 1000;
 }
 
@@ -519,7 +517,7 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  color: #2A91FB;
+  color: #2a91fb;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -557,7 +555,7 @@
     order: 1 !important;
     position: relative !important;
     inset: auto !important;
-    width: 40% !important; 
+    width: 40% !important;
     max-width: 160px !important;
     height: auto !important;
     margin: 0 0 40px 0 !important;
@@ -580,7 +578,7 @@
     position: relative !important;
     inset: auto !important;
     align-self: flex-end !important;
-    width: 75% !important; 
+    width: 75% !important;
     max-width: 280px !important;
     height: auto !important;
     margin: 20px 50px 20px 0 !important;
@@ -594,35 +592,43 @@
     margin-bottom: 20px !important;
   }
 
-  .banner, .banner-text {
+  .banner,
+  .banner-text {
     display: none !important;
   }
 
-  .shell1, .shell2 {
+  .shell1,
+  .shell2 {
     position: absolute !important;
     z-index: 2 !important;
     bottom: 0 !important;
     pointer-events: none;
   }
 
-  .shell1 { width: 100px !important; left: 0 !important; }
-  .shell2 { height: 90px !important; left: 0 !important; }
+  .shell1 {
+    width: 100px !important;
+    left: 0 !important;
+  }
+  .shell2 {
+    height: 90px !important;
+    left: 0 !important;
+  }
 }
 
 /* ---------- TIMER ------------- */
 
-.timer-loc{
+.timer-loc {
   margin-top: 60px;
   text-align: center;
 }
 
-.theme{
+.theme {
   font-size: 30px;
   font-weight: 800;
   color: rgba(5, 8, 168, 0.699);
 }
 
-.comingsoon{
+.comingsoon {
   font-size: 20px;
   font-weight: 700;
   color: rgba(5, 8, 168, 0.699);
@@ -664,7 +670,7 @@
 }
 
 /* ---------------------- */
-.gallery{
+.gallery {
   position: relative;
   display: flex;
   width: 100%;
@@ -673,7 +679,7 @@
   overflow: hidden;
   align-items: flex-start;
   flex-wrap: wrap;
-  background: linear-gradient(#1B4FFE,#072074);
+  background: linear-gradient(#1b4ffe, #072074);
   margin: 0 auto;
 }
 
@@ -685,11 +691,11 @@
   transform-style: preserve-3d;
 }
 
-.gallery-img1{
+.gallery-img1 {
   position: absolute;
-  left:10px;
-  top:20px;
-  width:320px;
+  left: 10px;
+  top: 20px;
+  width: 320px;
   height: 245px;
   border: 10px solid white;
   transform: rotate(-15deg);
@@ -698,9 +704,9 @@
 
 .gallery-img2 {
   position: absolute;
-  left:600px;
-  top:20px;
-  width:300px;
+  left: 600px;
+  top: 20px;
+  width: 300px;
   height: auto;
   border: 10px solid white;
   transform: rotate(15deg);
@@ -708,9 +714,9 @@
 
 .gallery-img3 {
   position: absolute;
-  right:20px;
-  top:20px;
-  width:320px;
+  right: 20px;
+  top: 20px;
+  width: 320px;
   height: 250px;
   border: 10px solid white;
   transform: rotate(-10deg);
@@ -718,7 +724,7 @@
 
 .waves {
   position: absolute;
-  top:100px;
+  top: 100px;
   width: 100%;
   z-index: 1;
   pointer-events: none;
@@ -732,62 +738,57 @@
   pointer-events: none;
 }
 
-.gallery-coral1{
+.gallery-coral1 {
   position: absolute;
   bottom: 30px;
   left: 80px;
 }
-.gallery-coral2{
+.gallery-coral2 {
   position: absolute;
   bottom: 45px;
   left: 500px;
-  
 }
-.gallery-coral3{
+.gallery-coral3 {
   position: absolute;
   bottom: 30px;
-  right:250px;
-  
+  right: 250px;
 }
-.gallery-coral4{
+.gallery-coral4 {
   position: absolute;
   bottom: 80px;
   right: 50px;
-  
 }
-.gallery-coral5{
+.gallery-coral5 {
   position: absolute;
   bottom: 70px;
   left: 360px;
-  
 }
-.gallery-coral6{
+.gallery-coral6 {
   position: absolute;
   bottom: 28px;
   right: 430px;
 }
 
-.gallery-coral7{
+.gallery-coral7 {
   position: absolute;
   bottom: 70px;
   right: 140px;
 }
 
-.gallery-coral8{
+.gallery-coral8 {
   position: absolute;
   bottom: 110px;
   left: 0px;
   z-index: 2;
 }
 
-.gallery-fish{
+.gallery-fish {
   position: absolute;
   top: 30px;
   left: 400px;
 }
 
 @media (max-width: 1100px) {
-  
   .home-wrapper {
     overflow-x: hidden; /* Stops horizontal scrolling from absolute elements */
   }
@@ -807,7 +808,9 @@
     align-items: center;
   }
 
-  .about-img, .about-infin8-img, .whale {
+  .about-img,
+  .about-infin8-img,
+  .whale {
     position: relative !important; /* Temporarily disable absolute positioning */
     top: 0 !important;
     left: 0 !important;
@@ -841,13 +844,17 @@
     top: 50px;
   }
 
-  .gallery-img1, .gallery-img2, .gallery-img3 {
+  .gallery-img1,
+  .gallery-img2,
+  .gallery-img3 {
     position: relative !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
     width: 280px !important;
-    transform: rotate(0deg) !important; /* Optional: keep or remove rotation on mobile */
+    transform: rotate(
+      0deg
+    ) !important; /* Optional: keep or remove rotation on mobile */
   }
 
   /* 4. Events Section */
@@ -857,7 +864,8 @@
     text-align: center;
   }
 
-  .left-content, .right-content {
+  .left-content,
+  .right-content {
     max-width: 100%;
     margin-top: 20px;
   }
@@ -893,5 +901,3 @@
     height: 300px;
   }
 }
-
-

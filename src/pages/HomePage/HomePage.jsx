@@ -36,7 +36,6 @@ import landingPageGif from "../../assets/landing-page.gif";
 import CountDownTimer from "./CountDownTimer";
 import "./HomePage.css";
 
-
 export default function HomePage() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -94,7 +93,9 @@ export default function HomePage() {
                       if (item.label === "About") {
                         // Scroll to About section
                         if (aboutSectionRef.current) {
-                          aboutSectionRef.current.scrollIntoView({ behavior: "smooth" });
+                          aboutSectionRef.current.scrollIntoView({
+                            behavior: "smooth",
+                          });
                         }
                         setOpen(false);
                       } else {
