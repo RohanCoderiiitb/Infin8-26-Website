@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Legends of the Sea";
   src: url("/fonts/LegendsOfTheSea-Regular.woff2") format("woff2"),
-    url("/fonts/LegendsOfTheSea-Regular.woff") format("woff");
+       url("/fonts/LegendsOfTheSea-Regular.woff") format("woff");
 }
 
 .home-wrapper {
@@ -19,10 +19,8 @@
   background-position: left 40%;
   background-repeat: no-repeat;
 
-  z-index: 2;
-  /* ABOVE gif */
-  pointer-events: none;
-  /* clicks pass through */
+  z-index: 2;              /* ABOVE gif */
+  pointer-events: none;    /* clicks pass through */
 }
 
 .hero-logo-wrapper {
@@ -43,8 +41,7 @@
   position: relative;
   height: 100vh;
 
-  background-color: #0c2c97;
-  /* fallback */
+  background-color: #0c2c97; /* fallback */
   background-size: cover;
   background-position: 30% 40%;
   background-repeat: no-repeat;
@@ -85,8 +82,10 @@
 }
 
 .hero-left-logo {
-  position: static; /* IMPORTANT */
-  width: clamp(18rem, 60vw, 50rem);
+  position: absolute;
+  top: 2rem;
+  left: 10rem;
+  width: 50rem;
   height: auto;
   z-index: 4;
   pointer-events: none;
@@ -150,40 +149,49 @@
   cursor: pointer;
 }
 
+:root {
+  font-size: 16px;
+}
+
 .events-section {
+  height: 100vh;
   background-color: #001148;
-  padding: 3rem 2rem;
+  padding: 3rem 0;
   color: white;
 }
 
 .events-content {
-  max-width: 1100px;
+  max-width: 68.75rem;
   margin: 0 auto;
   display: flex;
-  gap: 3rem;
+  gap: 1.875rem;
   align-items: flex-start;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .left-content {
-  margin-top: -20px;
-  flex: 1 1 500px;
-  max-width: 600px;
-  margin-bottom: 30px;
+  margin-top: -1.25rem;
+  flex: 1 1 31.25rem;
+  max-width: 37.5rem;
+  margin-bottom: 1.875rem;
+  margin-left: -8%;
+  text-align: left;
+  padding-left: 0.7rem;
 }
 
 .right-content {
-  margin-top: 100px;
-  flex: 1 1 400px;
+  margin-top: 6.25rem;
+  flex: 1 1 25rem;
   display: flex;
   align-items: center;
 }
 
 .event-gif {
-  width: 100%;
-  max-width: 1200px;
-  border-radius: 100%;
+  width: 100%;   
+  max-width: 75rem;
+  border-radius: 50%;
   height: auto;
+  margin-left: 10%;
 }
 
 .section-title {
@@ -191,29 +199,33 @@
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 400;
   color: white;
+  text-align: left;
 }
 
 .events-text {
-  max-width: 600px;
+  max-width: 37.5rem;
   color: #D6E9FF;
   font-family: 'Imprima', sans-serif;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 1.25rem;
   margin-bottom: 3rem;
+  text-align: left;
+  padding: 1rem;
+  margin-left: -3%;
 }
 
 .event-days {
   display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  gap: 1.25rem;
+  flex-wrap: wrap; 
 }
 
 .event-card {
-  background: none;
-  padding: 0;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  background: none;   
+  padding: 0;              
+  border-radius: 50%;        
+  width: 7.5rem;
+  height: 7.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -227,17 +239,118 @@
 }
 
 .pufferfish {
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
   object-fit: contain;
 }
 
 .event-card span {
-  margin-top: 0.5rem;
+  margin-top: 0.3125rem;
   font-size: 0.9rem;
   color: white;
   font-weight: 700;
 }
+
+@media (max-width: 1024px) {
+  .events-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .left-content,
+  .right-content {
+    flex: 1 1 100%;
+    max-width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .section-title {
+    margin-left: 0;
+  }
+
+  .events-text {
+    margin-left: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .right-content {
+    justify-content: center;
+  }
+
+  .event-gif {
+    max-width: 60rem;
+    margin-left: 0;
+    margin-bottom: 10%;
+  }
+
+  .event-days {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .events-section {
+    padding: 2rem 1rem;
+  }
+
+  .left-content {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .right-content {
+    margin-top: 0;
+  }
+
+  .section-title {
+    font-size: clamp(5rem, 14vw, 5.2rem);
+    margin-left: 0;
+  }
+
+  .event-gif {
+    position: relative;
+    top: -10%;
+  }
+
+  .events-text {
+    font-size: 1rem;
+    margin-left: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .event-card {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .pufferfish {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .event-card span {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .events-section {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .event-gif {
+    top: -6%;
+    max-height: 40vh;
+    object-fit: contain;
+  }
+}
+
 
 .about-section {
   position: relative;
@@ -246,29 +359,27 @@
   padding: 6rem 2rem;
   text-align: center;
 }
-
-.about-img {
+.about-img{
   position: absolute;
-  top: 140px;
-  left: 110px;
+  top:140px;
+  left:110px;
 }
 
-.about-infin8-img {
+.about-infin8-img{
   position: absolute;
-  top: 220px;
-  left: 180px;
+  top:220px;
+  left:180px;
 
 }
 
-.whale {
+.whale{
   position: absolute;
-  right: 80px;
+  right:80px;
   top: 30px;
   z-index: 0;
 }
-
 .about-text {
-  position: relative;
+  position:relative;
   align-items: center;
   margin: 0 auto;
   max-width: 650px;
@@ -276,7 +387,7 @@
   text-align: left;
   font-weight: 400;
   font-size: 20px;
-  font-family: 'Imprima', sans-serif;
+  font-family: 'Imprima',sans-serif;
   margin: auto;
   color: #D6E9FF;
 }
@@ -303,11 +414,13 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow-x: hidden;
 }
 
 .bg-image {
   height: 100vh;
   width: 100vw;
+  object-fit: cover;
 }
 
 .shell {
@@ -318,37 +431,40 @@
 }
 
 .shell1 {
-  bottom: 0px;
-  width: 220px;
+  bottom: 0;
+  width: 13.75rem;
+  left: 1%;
 }
 
 .shell2 {
-  bottom: 0px;
-  left: 2px;
-  height: 135px;
+  bottom: 0;
+  left: 0.125%;
+  height: 8.4375rem;
   width: auto;
 }
 
 .iiitb-logo {
   position: absolute;
-  bottom: 20px;
-  left: 400px;
+  bottom: 1.25rem;
+  left: 25%;
+  max-width: 20rem;
+  height: auto;
 }
 
 .footer-infin8-logo {
   position: absolute;
-  bottom: 10px;
-  left: 200px;
-  height: 600px;
-  width: 600px;
-
+  bottom: 8.125rem;
+  left: 15.625%;
+  height: 17.5rem;
+  width: 31.25rem;
+  max-width: 100%;
 }
 
 .banner {
   position: absolute;
-  top: 40px;
+  top: 2.5%;
   width: 100vw;
-  height: 300px;
+  height: 18.75rem;
 }
 
 .banner-text {
@@ -358,13 +474,13 @@
   font-family: 'Archivo', sans-serif;
   font-weight: 500;
   color: white;
-  font-size: 108px;
-  font: bold;
-  rotate: +4.1deg;
-  top: 160px;
-  left: -70px;
+  font-size: 6.75rem;
+  font-style: normal;
+  transform: rotate(4.1deg);
+  top: 20%;
+  left: -4.375%;
   width: 100vw;
-  height: 40px;
+  height: 2.5rem;
 }
 
 .banner-text p {
@@ -373,37 +489,36 @@
 }
 
 .get-in-touch {
-  font-size: 50px;
+  font-size: 3.125rem;
   font-weight: 600;
   font-family: 'Archivo', sans-serif;
-
+  text-align: center;
+  margin: 0 auto 2rem;
 }
 
 .social-icons {
   position: absolute;
-  bottom: 20px;
-  right: 100px;
+  bottom: 1.25rem;
+  right: 6.25%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-
+  gap: 0.875rem;
   font-family: 'Archivo', sans-serif;
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #2A91FB;
   z-index: 1000;
 }
 
 .icon {
-  font-size: 30px;
+  font-size: 1.875rem;
   display: flex;
   justify-content: space-between;
-
 }
 
 .social-icons a {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   color: #2A91FB;
   text-decoration: none;
   cursor: pointer;
@@ -411,12 +526,136 @@
 }
 
 .social-icons a:hover {
-  transform: translateX(6px);
+  transform: translateX(0.375rem);
   opacity: 0.85;
 }
 
+@media (max-width: 768px) {
+  #contact-us {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 70px 20px 40px 20px !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+  }
+
+  .bg-image {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    z-index: -1 !important;
+  }
+
+  .footer-infin8-logo {
+    order: 1 !important;
+    position: relative !important;
+    inset: auto !important;
+    width: 40% !important; 
+    max-width: 160px !important;
+    height: auto !important;
+    margin: 0 0 40px 0 !important;
+    z-index: 10 !important;
+  }
+
+  .social-icons {
+    gap: 0.4rem !important;
+    order: 2 !important;
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-width: 280px !important;
+    margin-bottom: 60px !important;
+    z-index: 10 !important;
+  }
+
+  .iiitb-logo {
+    order: 3 !important;
+    position: relative !important;
+    inset: auto !important;
+    align-self: flex-end !important;
+    width: 75% !important; 
+    max-width: 280px !important;
+    height: auto !important;
+    margin: 20px 50px 20px 0 !important;
+    z-index: 10 !important;
+  }
+
+  .get-in-touch {
+    font-size: 1.8rem !important;
+    text-align: center !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .banner, .banner-text {
+    display: none !important;
+  }
+
+  .shell1, .shell2 {
+    position: absolute !important;
+    z-index: 2 !important;
+    bottom: 0 !important;
+    pointer-events: none;
+  }
+
+  .shell1 { width: 100px !important; left: 0 !important; }
+  .shell2 { height: 90px !important; left: 0 !important; }
+}
 
 /* ---------- TIMER ------------- */
+
+.timer-loc{
+  margin-top: 60px;
+  text-align: center;
+}
+
+.theme{
+  font-size: 30px;
+  font-weight: 800;
+  color: rgba(5, 8, 168, 0.699);
+}
+
+.comingsoon{
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(5, 8, 168, 0.699);
+}
+
+.countdown {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.time-box {
+  background: rgba(0, 4, 255, 0.382);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1rem 1.4rem;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 80px;
+  backdrop-filter: blur(6px);
+}
+
+.time-box span {
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.time-box small {
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
 
 .countdown-ended {
   margin-top: 2rem;
@@ -424,20 +663,8 @@
   font-weight: 700;
 }
 
-.hero-content {
-  position: relative;
-  z-index: 4;
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: clamp(1.5rem, 4vh, 3rem);
-  
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-}
-
 /* ---------------------- */
-.gallery {
+.gallery{
   position: relative;
   display: flex;
   width: 100%;
@@ -446,7 +673,7 @@
   overflow: hidden;
   align-items: flex-start;
   flex-wrap: wrap;
-  background: linear-gradient(#1B4FFE, #072074);
+  background: linear-gradient(#1B4FFE,#072074);
   margin: 0 auto;
 }
 
@@ -458,11 +685,11 @@
   transform-style: preserve-3d;
 }
 
-.gallery-img1 {
+.gallery-img1{
   position: absolute;
-  left: 10px;
-  top: 20px;
-  width: 320px;
+  left:10px;
+  top:20px;
+  width:320px;
   height: 245px;
   border: 10px solid white;
   transform: rotate(-15deg);
@@ -471,9 +698,9 @@
 
 .gallery-img2 {
   position: absolute;
-  left: 600px;
-  top: 20px;
-  width: 300px;
+  left:600px;
+  top:20px;
+  width:300px;
   height: auto;
   border: 10px solid white;
   transform: rotate(15deg);
@@ -481,9 +708,9 @@
 
 .gallery-img3 {
   position: absolute;
-  right: 20px;
-  top: 20px;
-  width: 320px;
+  right:20px;
+  top:20px;
+  width:320px;
   height: 250px;
   border: 10px solid white;
   transform: rotate(-10deg);
@@ -491,7 +718,7 @@
 
 .waves {
   position: absolute;
-  top: 100px;
+  top:100px;
   width: 100%;
   z-index: 1;
   pointer-events: none;
@@ -505,357 +732,102 @@
   pointer-events: none;
 }
 
-.gallery-coral1 {
+.gallery-coral1{
   position: absolute;
   bottom: 30px;
   left: 80px;
 }
-
-.gallery-coral2 {
+.gallery-coral2{
   position: absolute;
   bottom: 45px;
   left: 500px;
-
+  
 }
-
-.gallery-coral3 {
+.gallery-coral3{
   position: absolute;
   bottom: 30px;
-  right: 250px;
-
+  right:250px;
+  
 }
-
-.gallery-coral4 {
+.gallery-coral4{
   position: absolute;
   bottom: 80px;
   right: 50px;
-
+  
 }
-
-.gallery-coral5 {
+.gallery-coral5{
   position: absolute;
   bottom: 70px;
   left: 360px;
-
+  
 }
-
-.gallery-coral6 {
+.gallery-coral6{
   position: absolute;
   bottom: 28px;
   right: 430px;
 }
 
-.gallery-coral7 {
+.gallery-coral7{
   position: absolute;
   bottom: 70px;
   right: 140px;
 }
 
-.gallery-coral8 {
+.gallery-coral8{
   position: absolute;
   bottom: 110px;
   left: 0px;
   z-index: 2;
 }
 
-.gallery-fish {
+.gallery-fish{
   position: absolute;
   top: 30px;
   left: 400px;
 }
 
-@media (max-width: 1100px) and (min-width: 769px) {
-
-  /* Tablet-specific styles */
+@media (max-width: 1100px) {
+  
   .home-wrapper {
-    overflow-x: hidden;
+    overflow-x: hidden; /* Stops horizontal scrolling from absolute elements */
   }
 
-  /* Hide/reduce overlay on tablets */
-  .hero-section::before {
-    opacity: 0.3;
-  }
-
-  /* Hero Section for Tablets */
-  .hero-section {
-    height: 100vh;
-    padding: 0 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .hero-left-logo {
-    width: clamp(18rem, 60vw, 50rem);
-    height: auto;
-    pointer-events: none;
-  }
-
-  .landing-gif {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
-    opacity: 0.3;
-    z-index: 1;
-  }
-
-  .hamburger-btn {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 10;
-  }
-
+  /* 1. Hero Title Scaling */
   .hero-title {
     font-size: 3.5rem;
     letter-spacing: 0.1em;
     text-align: center;
   }
 
-  .hero-timer {
-    width: 100%;
-    max-width: 100vw;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: center;
-  }
-
-
-  /* About Section for Tablets */
+  /* 2. Fix the About Section Images */
   .about-section {
-    padding: 4rem 1.5rem;
+    padding: 4rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  .about-img {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 45% !important;
-    max-width: 230px;
-    margin: 0 auto -10px auto;
-    z-index: 3;
-  }
-
-  .about-infin8-img {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 40% !important;
-    max-width: 210px;
-    margin: 0 auto -15px auto;
-    z-index: 2;
-  }
-
-  .whale {
-    position: relative !important;
+  .about-img, .about-infin8-img, .whale {
+    position: relative !important; /* Temporarily disable absolute positioning */
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    width: 60% !important;
-    max-width: 300px;
-    margin: 0 auto;
-    z-index: 1;
+    width: 80% !important;
+    max-width: 350px;
+    margin: 0 auto -80px auto; /* Keeps the layering effect but centered */
   }
 
   .about-text {
-    transform: none !important;
-    margin-top: 2.5rem;
-    padding: 0 1.5rem;
-    text-align: center;
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 100%;
-  }
-
-  /* Gallery for Tablets */
-  .gallery {
-    height: auto;
-    min-height: 800px;
-    padding-bottom: 50px;
-  }
-
-  .moving-image {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    top: 50px;
-  }
-
-  .gallery-img1,
-  .gallery-img2,
-  .gallery-img3 {
-    position: relative !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    width: 280px !important;
-    transform: rotate(0deg) !important;
-  }
-
-  /* Events Section for Tablets */
-  .events-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .left-content,
-  .right-content {
-    max-width: 100%;
-    margin-top: 20px;
-  }
-
-  .event-days {
-    justify-content: center;
-  }
-
-  /* Footer for Tablets */
-  .banner-text {
-    top: 100px;
-    left: -50px;
-  }
-
-  .banner-text p {
-    font-size: 40px;
-  }
-
-  .social-icons {
-    right: 20px;
-    bottom: 20px;
-    font-size: 14px;
-  }
-
-  .iiitb-logo {
-    left: 20px;
-    width: 100px;
-  }
-
-  .footer-infin8-logo {
-    left: 10%;
-    width: 300px;
-    height: 300px;
-  }
-}
-
-@media (max-width: 768px) {
-
-  .home-wrapper {
-    overflow-x: hidden;
-  }
-
-  .hero-content {
-    gap: 4.5rem;   /* adjust 4–5rem if needed */
-  }
-
-  .hero-left-logo {
-    position: static;
-    width: clamp(18rem, 70vw, 45rem);
-  }
-
-  /* Hide/reduce overlay on mobile */
-  .hero-section::before {
-    opacity: 0.3;
-  }
-
-  /* 1. Hero Section Responsiveness for Phones */
-  .hero-section {
-    height: 100vh;
+    transform: none !important; /* Remove the 50px offset */
+    margin-top: 100px;
     padding: 0 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .landing-gif {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
-    opacity: 0.3;
-    z-index: 1;
-  }
-
-  .hamburger-btn {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 10;
-  }
-
-  /* 2. Hero Title Scaling */
-  .hero-title {
-    font-size: 3.5rem;
-    letter-spacing: 0.1em;
     text-align: center;
-  }
-
-  /* 2. About Section - Enhanced Responsive Design */
-  .about-section {
-    padding: 4rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .about-img {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 50% !important;
-    max-width: 250px;
-    margin: 0 auto -10px auto;
-    z-index: 3;
-  }
-
-  .about-infin8-img {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 45% !important;
-    max-width: 230px;
-    margin: 0 auto -15px auto;
-    z-index: 2;
-  }
-
-  .whale {
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 65% !important;
-    max-width: 320px;
-    margin: 0 auto;
-    z-index: 1;
-  }
-
-  .about-text {
-    transform: none !important;
-    margin-top: 2.5rem;
-    padding: 0 1.5rem;
-    text-align: center;
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 100%;
+    font-size: 18px;
   }
 
   /* 3. Gallery Responsiveness */
   .gallery {
-    height: auto;
-    /* Let it expand for stacked images */
+    height: auto; /* Let it expand for stacked images */
     min-height: 800px;
     padding-bottom: 50px;
   }
@@ -869,16 +841,13 @@
     top: 50px;
   }
 
-  .gallery-img1,
-  .gallery-img2,
-  .gallery-img3 {
+  .gallery-img1, .gallery-img2, .gallery-img3 {
     position: relative !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
     width: 280px !important;
-    transform: rotate(0deg) !important;
-    /* Optional: keep or remove rotation on mobile */
+    transform: rotate(0deg) !important; /* Optional: keep or remove rotation on mobile */
   }
 
   /* 4. Events Section */
@@ -888,8 +857,7 @@
     text-align: center;
   }
 
-  .left-content,
-  .right-content {
+  .left-content, .right-content {
     max-width: 100%;
     margin-top: 20px;
   }
@@ -905,8 +873,7 @@
   }
 
   .banner-text p {
-    font-size: 40px;
-    /* Shrink the massive 108px font */
+    font-size: 40px; /* Shrink the massive 108px font */
   }
 
   .social-icons {
@@ -927,44 +894,4 @@
   }
 }
 
-/* Additional breakpoint for small phones */
-@media (max-width: 600px) {
 
-
-  .landing-gif {
-    opacity: 0.25;
-  }
-
-  .hamburger-btn {
-    top: 0.75rem;
-    left: 0.75rem;
-  }
-
-  .countdown-ended {
-    font-size: 1.4rem;
-    color: white;
-  }
-
-  /* About section for phones */
-  .about-img {
-    width: 45% !important;
-    max-width: 200px !important;
-    margin: 0 auto -5px auto !important;
-  }
-
-  .about-infin8-img {
-    width: 40% !important;
-    max-width: 180px !important;
-    margin: 0 auto -10px auto !important;
-  }
-
-  .whale {
-    width: 55% !important;
-    max-width: 260px !important;
-  }
-
-  .about-text {
-    font-size: 15px;
-    margin-top: 2rem;
-  }
-}
