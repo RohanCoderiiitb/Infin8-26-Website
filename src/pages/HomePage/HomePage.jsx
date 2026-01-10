@@ -51,19 +51,21 @@ export default function HomePage() {
   return (
     <div className="home-wrapper">
       <section className="hero-section">
-        <motion.img
-          src={logo}
-          alt="logo"
-          className="hero-left-logo"
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{
-            duration: 0.9,
-            ease: "easeOut",
-          }}
-        />
 
-        <CountDownTimer />
+        <div className="hero-content">
+          <motion.img
+            src={logo}
+            alt="logo"
+            className="hero-left-logo"
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+          />
+
+          <div className="hero-timer">
+            <CountDownTimer />
+          </div>
+        </div>
 
         <button onClick={() => setOpen(true)} className="hamburger-btn">
           <Menu size={36} />
@@ -92,9 +94,7 @@ export default function HomePage() {
                       if (item.label === "About") {
                         // Scroll to About section
                         if (aboutSectionRef.current) {
-                          aboutSectionRef.current.scrollIntoView({
-                            behavior: "smooth",
-                          });
+                          aboutSectionRef.current.scrollIntoView({ behavior: "smooth" });
                         }
                         setOpen(false);
                       } else {
@@ -114,6 +114,7 @@ export default function HomePage() {
         <img src={landingPageGif} alt="landing page" className="landing-gif" />
       </section>
 
+
       <section ref={aboutSectionRef} className="about-section">
         <motion.div
           initial="hidden"
@@ -124,35 +125,37 @@ export default function HomePage() {
             visible: { transition: { staggerChildren: 0.2 } },
           }}
         >
-          <motion.img
-            src={aboutimg}
-            alt="about"
-            className="about-img"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          />
+          <div className="about-images-container">
+            <motion.img
+              src={aboutimg}
+              alt="about"
+              className="about-img"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            />
 
-          <motion.img
-            src={aboutinfin8}
-            alt="infin8"
-            className="about-infin8-img"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          />
+            <motion.img
+              src={aboutinfin8}
+              alt="infin8"
+              className="about-infin8-img"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            />
 
-          <motion.img
-            src={whale}
-            alt="whale"
-            className="whale"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            viewport={{ once: true }}
-          />
+            <motion.img
+              src={whale}
+              alt="whale"
+              className="whale"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            />
+          </div>
 
           <motion.p
             className="about-text"
@@ -162,24 +165,14 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             The annual cultural bash at IIIT-B, is a three-day extravaganza
-            filled with
-            <br />
-            vibrant shows, performances, competitions, games, and stalls.
-            <br />
-            <br />
-            A unique and exciting experience for everyone
-            <br />
-            <br />
+            filled with vibrant shows, performances, competitions, games, and stalls.
+            <br /><br />
+            A unique and exciting experience for everyone.
+            <br /><br />
             Talented artists from all corners of India come to showcase their
-            skills,
-            <br />
-            turning it into a thrilling spectacle. What's more, lots of students
-            from
-            <br />
-            other colleges in Bangalore join the fun, making Infin8 a true
-            festival of
-            <br />
-            creativity and celebration.
+            skills, turning it into a thrilling spectacle. What's more, lots of students
+            from other colleges in Bangalore join the fun, making Infin8 a true
+            festival of creativity and celebration.
           </motion.p>
         </motion.div>
       </section>
