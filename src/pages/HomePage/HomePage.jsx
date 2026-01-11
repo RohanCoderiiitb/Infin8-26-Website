@@ -14,6 +14,7 @@ import whale from "../../assets/about-shark.png";
 import aboutimg from "../../assets/About.svg";
 import aboutinfin8 from "../../assets/Infin8.svg";
 import pufferfish from "../../assets/Home/puffer-fish.png";
+import overlayImg from "../../assets/Home/overlay.svg";
 import eventgif from "../../assets/Home/events.gif";
 import seabed from "../../assets/Home/gallery-seabed.png";
 import waves from "../../assets/Home/gallery-waves.png";
@@ -21,16 +22,8 @@ import galleryimg1 from "../../assets/Home/gallery-temp1.png";
 import galleryimg2 from "../../assets/Home/gallery-temp2.png";
 import galleryimg3 from "../../assets/Home/gallery-temp3.png";
 import logo from "../../assets/Home/logo.png";
-import coral1 from "../../assets/Home/coral1.png";
-import coral2 from "../../assets/Home/coral2.png";
-import coral3 from "../../assets/Home/coral3.png";
-import coral4 from "../../assets/Home/coral4.png";
-import coral5 from "../../assets/Home/coral5.png";
-import coral6 from "../../assets/Home/coral6.png";
-import coral7 from "../../assets/Home/coral7.png";
-import coral8 from "../../assets/Home/coral8.png";
+import sand from "../../assets/Home/sand.png";
 import fish from "../../assets/Home/fish.png";
-
 import landingPageGif from "../../assets/landing-page.gif";
 
 import CountDownTimer from "./CountDownTimer";
@@ -51,19 +44,27 @@ export default function HomePage() {
   return (
     <div className="home-wrapper">
       <section className="hero-section">
-        <motion.img
-          src={logo}
-          alt="logo"
-          className="hero-left-logo"
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{
-            duration: 0.9,
-            ease: "easeOut",
-          }}
+        <img
+          src={overlayImg}
+          alt=""
+          className="hero-overlay"
+          loading="eager"
+          fetchPriority="high"
         />
-
-        <CountDownTimer />
+        <div className="hero-content">
+          <motion.img
+            src={logo}
+            alt="logo"
+            className="hero-left-logo"
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 0.9,
+              ease: "easeOut",
+            }}
+          />
+          <CountDownTimer />
+        </div>
 
         <button onClick={() => setOpen(true)} className="hamburger-btn">
           <Menu size={36} />
@@ -90,7 +91,6 @@ export default function HomePage() {
                     className="nav-item"
                     onClick={() => {
                       if (item.label === "About") {
-                        // Scroll to About section
                         if (aboutSectionRef.current) {
                           aboutSectionRef.current.scrollIntoView({
                             behavior: "smooth",
@@ -207,54 +207,7 @@ export default function HomePage() {
         </motion.div>
         <img src={waves} alt="waves" className="waves" loading="lazy" />
         <img src={seabed} alt="seabed" className="seabed" loading="lazy" />
-        <img
-          src={coral1}
-          alt="coral1"
-          className="gallery-coral1"
-          loading="lazy"
-        />
-        <img
-          src={coral2}
-          alt="coral2"
-          className="gallery-coral2"
-          loading="lazy"
-        />
-        <img
-          src={coral3}
-          alt="coral3"
-          className="gallery-coral3"
-          loading="lazy"
-        />
-        <img
-          src={coral4}
-          alt="coral4"
-          className="gallery-coral4"
-          loading="lazy"
-        />
-        <img
-          src={coral5}
-          alt="coral5"
-          className="gallery-coral5"
-          loading="lazy"
-        />
-        <img
-          src={coral6}
-          alt="coral6"
-          className="gallery-coral6"
-          loading="lazy"
-        />
-        <img
-          src={coral7}
-          alt="coral7"
-          className="gallery-coral7"
-          loading="lazy"
-        />
-        <img
-          src={coral8}
-          alt="coral8"
-          className="gallery-coral8"
-          loading="lazy"
-        />
+        <img src={sand} alt="sand" className="gallery-sand" loading="lazy" />
         <img src={fish} alt="fish" className="gallery-fish" loading="lazy" />
       </section>
 
@@ -328,24 +281,40 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* <section className="team-section">
-        <h2 className="section-title">MEET OUR TEAM</h2>
-        <button className="team-btn" onClick={() => navigate("/teams")}>
-          VIEW TEAM
-        </button>
-      </section> */}
-
       <FaqSection />
+
       <footer id="contact-us">
-        <img src={footerbg} className="bg-image" loading="lazy" />
-        <img src={shell1} className="shell shell1" loading="lazy" />
-        <img src={shell2} className="shell shell2" loading="lazy" />
-        <img src={iiitblogo} className="iiitb-logo" loading="lazy" />
-        <img src={banner} className="banner" loading="lazy" />
-        <img src={infin8logo} className="footer-infin8-logo" loading="lazy" />
-        <div className="banner-text">
-          <p>INFIN8. 2026. INFIN8. 2026. INFIN8 2026.</p>
-        </div>
+        <img
+          src={footerbg}
+          className="bg-image"
+          loading="lazy"
+          alt="footer background"
+        />
+        <img
+          src={shell1}
+          className="shell shell1"
+          loading="lazy"
+          alt="shell decoration"
+        />
+        <img
+          src={shell2}
+          className="shell shell2"
+          loading="lazy"
+          alt="shell decoration"
+        />
+        <img
+          src={iiitblogo}
+          className="iiitb-logo"
+          loading="lazy"
+          alt="IIITB logo"
+        />
+        <img src={banner} className="banner" loading="lazy" alt="banner" />
+        <img
+          src={infin8logo}
+          className="footer-infin8-logo"
+          loading="lazy"
+          alt="Infin8 logo"
+        />
         <div className="social-icons">
           <h2 className="get-in-touch">Get in touch.</h2>
           <a href="https://x.com/infin8_iiitb" className="icon">

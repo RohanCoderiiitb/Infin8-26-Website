@@ -493,13 +493,22 @@ export default function TeamPage() {
       return () => {
         ctx.revert();
         lenis.destroy();
+        lenisRef.current = null;
         gsap.ticker.remove(tick);
         ScrollTrigger.getAll().forEach((t) => t.kill());
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
       };
     });
 
     return () => {
       mm.revert();
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [dataReady]);
 
@@ -537,133 +546,133 @@ export default function TeamPage() {
         ))}
       </div>
       <button onClick={() => setOpen(true)} className="team-hamburger-btn">
-          <Menu size={36} />
+        <Menu size={36} />
       </button>
 
-        <AnimatePresence>
-          {open && (
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="sidebar"
-            >
-              <button onClick={() => setOpen(false)} className="close-btn">
-                <X size={28} />
-              </button>
+      <AnimatePresence>
+        {open && (
+          <motion.aside
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="sidebar"
+          >
+            <button onClick={() => setOpen(false)} className="close-btn">
+              <X size={28} />
+            </button>
 
-              <nav className="sidebar-nav">
-                {menuItems.map((item) => (
-                  <motion.button
-                    key={item.label}
-                    whileHover={{ scale: 1.1, x: -10 }}
-                    className="nav-item"
-                    onClick={() => {
-                        navigate(item.path);
-                        setOpen(false);
-                    }}
-                  >
-                    {item.label.toUpperCase()}
-                  </motion.button>
-                ))}
-              </nav>
-            </motion.aside>
-          )}
-        </AnimatePresence>
-
-        <header className="team-header-static">
-          <h1 className="main-title">MEET OUR TEAM</h1>
-          <div className="title-underline"></div>
-        </header>
-
-        <div className="team-grid-wrapper">
-          <div className="desktop-grid">
-            <div className="team-column team-column-left">
-              <div className="vertical-divider"></div>
-              <div className="column-label">WEBSITE</div>
-              <div className="team-cards-container">
-                {teamData.website.map((member, index) => (
-                  <TeamCard
-                    key={member.id}
-                    member={member}
-                    isPriority={index < 3}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="team-column team-column-middle">
-              <div className="vertical-divider vertical-divider-center"></div>
-              <div className="column-label column-label-center">ORGANIZERS</div>
-              <div className="team-cards-container">
-                {teamData.organizers.map((member, index) => (
-                  <TeamCard
-                    key={member.id}
-                    member={member}
-                    size="large"
-                    isPriority={index < 3}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="team-column team-column-right">
-              <div className="vertical-divider"></div>
-              <div className="column-label">DESIGNERS</div>
-              <div className="team-cards-container">
-                {teamData.designers.map((member, index) => (
-                  <TeamCard
-                    key={member.id}
-                    member={member}
-                    isPriority={index < 3}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mobile-grid">
-          <section className="mobile-section">
-            <h2 className="mobile-title">ORGANIZERS</h2>
-            <div className="mobile-cards">
-              {teamData.organizers.map((member, index) => (
-                <TeamCard
-                  key={member.id}
-                  member={member}
-                  isPriority={index < 2}
-                />
+            <nav className="sidebar-nav">
+              {menuItems.map((item) => (
+                <motion.button
+                  key={item.label}
+                  whileHover={{ scale: 1.1, x: -10 }}
+                  className="nav-item"
+                  onClick={() => {
+                    navigate(item.path);
+                    setOpen(false);
+                  }}
+                >
+                  {item.label.toUpperCase()}
+                </motion.button>
               ))}
-            </div>
-          </section>
+            </nav>
+          </motion.aside>
+        )}
+      </AnimatePresence>
 
-          <section className="mobile-section">
-            <h2 className="mobile-title">WEBSITE</h2>
-            <div className="mobile-cards">
+      <header className="team-header-static">
+        <h1 className="main-title">MEET OUR TEAM</h1>
+        <div className="title-underline"></div>
+      </header>
+
+      <div className="team-grid-wrapper">
+        <div className="desktop-grid">
+          <div className="team-column team-column-left">
+            <div className="vertical-divider"></div>
+            <div className="column-label">WEBSITE</div>
+            <div className="team-cards-container">
               {teamData.website.map((member, index) => (
                 <TeamCard
                   key={member.id}
                   member={member}
-                  isPriority={index < 2}
+                  isPriority={index < 3}
                 />
               ))}
             </div>
-          </section>
+          </div>
 
-          <section className="mobile-section">
-            <h2 className="mobile-title">DESIGNERS</h2>
-            <div className="mobile-cards">
+          <div className="team-column team-column-middle">
+            <div className="vertical-divider vertical-divider-center"></div>
+            <div className="column-label column-label-center">ORGANIZERS</div>
+            <div className="team-cards-container">
+              {teamData.organizers.map((member, index) => (
+                <TeamCard
+                  key={member.id}
+                  member={member}
+                  size="large"
+                  isPriority={index < 3}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="team-column team-column-right">
+            <div className="vertical-divider"></div>
+            <div className="column-label">DESIGNERS</div>
+            <div className="team-cards-container">
               {teamData.designers.map((member, index) => (
                 <TeamCard
                   key={member.id}
                   member={member}
-                  isPriority={index < 2}
+                  isPriority={index < 3}
                 />
               ))}
             </div>
-          </section>
+          </div>
         </div>
       </div>
+
+      <div className="mobile-grid">
+        <section className="mobile-section">
+          <h2 className="mobile-title">ORGANIZERS</h2>
+          <div className="mobile-cards">
+            {teamData.organizers.map((member, index) => (
+              <TeamCard
+                key={member.id}
+                member={member}
+                isPriority={index < 2}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="mobile-section">
+          <h2 className="mobile-title">WEBSITE</h2>
+          <div className="mobile-cards">
+            {teamData.website.map((member, index) => (
+              <TeamCard
+                key={member.id}
+                member={member}
+                isPriority={index < 2}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="mobile-section">
+          <h2 className="mobile-title">DESIGNERS</h2>
+          <div className="mobile-cards">
+            {teamData.designers.map((member, index) => (
+              <TeamCard
+                key={member.id}
+                member={member}
+                isPriority={index < 2}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }

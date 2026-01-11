@@ -4,8 +4,64 @@
   scroll-behavior: auto;
 }
 
-html {
+html,
+body {
   overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 320px;
+  max-width: 85vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, #0f172a, #020617);
+  z-index: 1000000;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  transition: transform 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+}
+
+.sidebar-nav {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #4dd0e1;
+  text-shadow: 0 0 20px rgba(77, 208, 225, 0.6);
 }
 
 .svg-filters {
@@ -705,6 +761,19 @@ html {
     min-height: 96px;
     line-height: 1.1;
   }
+
+  .mobile-grid {
+    padding-bottom: 100px;
+    overflow-y: visible;
+  }
+
+  .team-grid-wrapper {
+    min-height: auto;
+    overflow: visible;
+  }
+  .team-header-static {
+    padding-top: 80px;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -977,6 +1046,38 @@ html {
   transform: scale(0.95);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4),
     inset 0 0 18px rgba(77, 208, 225, 0.35);
+}
+
+.team-hamburger-btn {
+  position: fixed !important;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(10, 40, 60, 0.55);
+  backdrop-filter: blur(14px);
+  border: 2px solid rgba(77, 208, 225, 0.55);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+  z-index: 100;
+  transition: all 0.35s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 0 20px rgba(77, 208, 225, 0.25);
+}
+
+.team-hamburger-btn:hover {
+  background: rgba(10, 40, 60, 0.75);
+  border-color: #4dd0e1;
+  transform: scale(1.05);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.45), 0 0 25px rgba(77, 208, 225, 0.6),
+    inset 0 0 25px rgba(77, 208, 225, 0.4);
+}
+
+@media (max-width: 768px) {
+  .team-hamburger-btn {
+    top: 1rem;
+    left: 1rem;
+  }
 }
 
 @media (max-width: 768px) {

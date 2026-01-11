@@ -7,24 +7,78 @@ const isGoogleForm = (url) => {
   return url.includes("docs.google.com/forms") || url.includes("forms.gle");
 };
 
+const isMicrosoftForm = (url) => {
+  if (!url) return false;
+  return (
+    url.includes("forms.office.com") || url.includes("forms.microsoft.com")
+  );
+};
+
+const isEmbeddableForm = (url) => {
+  return isGoogleForm(url) || isMicrosoftForm(url);
+};
+
 const getEmbeddableFormUrl = (url) => {
   if (!url) return "";
-  if (url.includes("/viewform?embedded=true")) return url;
-  if (url.includes("forms.gle"))
-    return (
-      url.replace("forms.gle", "docs.google.com/forms/d/e") +
-      "/viewform?embedded=true"
-    );
-  if (url.includes("/viewform")) {
-    return url.replace("/viewform", "/viewform?embedded=true");
+
+  if (isGoogleForm(url)) {
+    if (url.includes("forms.gle")) {
+      return "";
+    }
+
+    const formIdMatch = url.match(/\/forms\/d\/e\/([a-zA-Z0-9_-]+)/);
+
+    if (formIdMatch && formIdMatch[1]) {
+      const formId = formIdMatch[1];
+      return `https://docs.google.com/forms/d/e/${formId}/viewform?embedded=true`;
+    }
+
+    if (url.includes("embedded=true")) {
+      return url;
+    }
+
+    let cleanUrl = url.replace(/[?&]usp=dialog/, "");
+    cleanUrl = cleanUrl.replace(/[?&]usp=[^&]*/, "");
+
+    if (cleanUrl.includes("/viewform")) {
+      return (
+        cleanUrl +
+        (cleanUrl.includes("?") ? "&embedded=true" : "?embedded=true")
+      );
+    }
+
+    return cleanUrl + "/viewform?embedded=true";
   }
-  return url + (url.includes("?") ? "&embedded=true" : "?embedded=true");
+
+  if (isMicrosoftForm(url)) {
+    if (url.includes("embed=true")) return url;
+    return url + (url.includes("?") ? "&embed=true" : "?embed=true");
+  }
+
+  return url;
+};
+
+const canActuallyEmbed = (url) => {
+  if (!url) return false;
+
+  if (url.includes("forms.gle")) return false;
+  if (url.includes("docs.google.com/forms/d/e/")) {
+    const formIdMatch = url.match(/\/forms\/d\/e\/([a-zA-Z0-9_-]+)/);
+    return !!formIdMatch;
+  }
+
+  if (url.includes("docs.google.com/forms")) return true;
+
+  if (isMicrosoftForm(url)) return true;
+
+  return false;
 };
 
 export default function EventModal({ event, onClose }) {
   const [failedPosterUrl, setFailedPosterUrl] = useState(null);
   const [showEmbeddedForm, setShowEmbeddedForm] = useState(false);
   const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+  const [iframeError, setIframeError] = useState(false);
 
   if (!event) return null;
 
@@ -36,9 +90,11 @@ export default function EventModal({ event, onClose }) {
     event.poster === "" ||
     isImageError;
 
-  const canEmbedForm = isGoogleForm(event.regLink);
+  const canEmbedForm = canActuallyEmbed(event.regLink);
+  const embedUrl = getEmbeddableFormUrl(event.regLink);
+  const formType = isMicrosoftForm(event.regLink) ? "Microsoft" : "Google";
 
-  if (showEmbeddedForm && canEmbedForm) {
+  if (showEmbeddedForm && canEmbedForm && embedUrl) {
     return (
       <div
         className="fixed inset-0 z-[9999] flex items-center justify-center p-3 md:p-6"
@@ -63,6 +119,9 @@ export default function EventModal({ event, onClose }) {
               style={{ fontFamily: '"Cinzel", serif' }}
             >
               Register: <span className="text-yellow-400">{event.title}</span>
+              <span className="ml-2 text-xs text-cyan-400/70">
+                ({formType} Form)
+              </span>
             </h3>
 
             <div className="flex gap-2 shrink-0">
@@ -87,7 +146,11 @@ export default function EventModal({ event, onClose }) {
               </a>
 
               <button
-                onClick={() => setShowEmbeddedForm(false)}
+                onClick={() => {
+                  setShowEmbeddedForm(false);
+                  setIsIframeLoaded(false);
+                  setIframeError(false);
+                }}
                 className="w-8 h-8 rounded-full flex items-center justify-center bg-[rgba(255,215,0,0.15)] border border-[rgba(255,215,0,0.4)] hover:rotate-90 transition-all duration-300"
               >
                 <svg
@@ -104,24 +167,41 @@ export default function EventModal({ event, onClose }) {
           </div>
 
           <div className="relative flex-1 bg-white w-full">
-            {!isIframeLoaded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a1628] z-0">
+            {!isIframeLoaded && !iframeError && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a1628] z-10">
                 <div className="w-10 h-10 border-4 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin mb-4"></div>
                 <p className="text-yellow-400/80 text-sm font-cinzel tracking-widest animate-pulse">
-                  LOADING FORM...
+                  LOADING {formType.toUpperCase()} FORM...
                 </p>
               </div>
             )}
 
+            {iframeError && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0a1628] z-10">
+                <p className="text-red-400 text-sm mb-4">Failed to load form</p>
+                <a
+                  href={event.regLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-2 bg-yellow-400 text-[#0a1628] rounded-lg font-bold"
+                >
+                  Open in New Tab
+                </a>
+              </div>
+            )}
+
             <iframe
-              src={getEmbeddableFormUrl(event.regLink)}
+              src={embedUrl}
               className={`w-full h-full border-0 transition-opacity duration-500 ${
-                isIframeLoaded ? "opacity-100" : "opacity-0"
+                isIframeLoaded && !iframeError ? "opacity-100" : "opacity-0"
               }`}
               title={`Registration form for ${event.title}`}
               loading="lazy"
               onLoad={() => setIsIframeLoaded(true)}
+              onError={() => setIframeError(true)}
               allowFullScreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
             />
           </div>
         </div>

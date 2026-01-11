@@ -1,6 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/infin8iiitb/public_html/
-    - /bin/rm -rf $DEPLOYPATH/*
-    - /bin/cp -R dist/* $DEPLOYPATH
