@@ -401,6 +401,7 @@
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
+  z-index: 1;
 }
 
 .bg-image {
@@ -573,7 +574,10 @@
   .hero-section::before {
     background-size: auto 100%;
     background-position: -100px center;
-    opacity: 0.7;
+    opacity: 0.5;
+  }
+  .hero-overlay {
+    opacity: 0.5;
   }
 
   .hero-content {
@@ -771,7 +775,7 @@
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    z-index: -1 !important;
+    z-index: 0 !important;
   }
 
   .footer-infin8-logo {
@@ -818,6 +822,11 @@
 
   .banner {
     display: none !important;
+  }
+
+  .banner {
+    z-index: 2;
+    /* ADD */
   }
 
   .shell1,
@@ -907,6 +916,58 @@
     max-width: 240px;
   }
 
+  .hero-section::before {
+    opacity: 0.3;
+  }
+
+  .hero-section {
+    height: 100vh;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+  }
+
+  .hero-left-logo {
+    width: clamp(18rem, 60vw, 50rem);
+    height: auto;
+    pointer-events: none;
+  }
+
+  .landing-gif {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    opacity: 0.3;
+    z-index: 1;
+  }
+
+  .hamburger-btn {
+    top: 1rem;
+    left: 1rem;
+    z-index: 100;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .hero-timer {
+    width: 100%;
+    max-width: 100vw;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
   #contact-us {
     padding: 50px 15px 25px 15px !important;
   }
@@ -949,5 +1010,46 @@
 
   .hero-left-logo {
     margin-left: 0;
+  }
+}
+
+/* Additional breakpoint for small phones */
+@media (max-width: 600px) {
+  .landing-gif {
+    opacity: 0.25;
+  }
+
+  .hamburger-btn {
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 100;
+  }
+
+  .countdown-ended {
+    font-size: 1.4rem;
+    color: white;
+  }
+
+  /* About section for phones */
+  .about-img {
+    width: 45% !important;
+    max-width: 200px !important;
+    margin: 0 auto -5px auto !important;
+  }
+
+  .about-infin8-img {
+    width: 40% !important;
+    max-width: 180px !important;
+    margin: 0 auto -10px auto !important;
+  }
+
+  .whale {
+    width: 55% !important;
+    max-width: 260px !important;
+  }
+
+  .about-text {
+    font-size: 15px;
+    margin-top: 2rem;
   }
 }
