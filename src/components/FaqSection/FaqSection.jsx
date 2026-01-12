@@ -8,7 +8,7 @@ const faqs = [
   {
     question: "How do we register?",
     answer:
-      "Visit the events page and fill out the Google Form for the event you wish to participate in. A QR code is available in the form. Non-IIITB students should scan the QR code, complete the payment, take a screenshot of the receipt, and submit it through the form. IIITB students are exempt from event fees; however, they should also upload a picture of their student ID as part of the registration process.",
+      "Visit the events page and fill out the Google Form for the event you wish to participate in. A QR code is available in the form. Non-IIITB students should scan the QR code, complete the payment, take a screenshot of the receipt, and submit it through the form. IIITB students are exempt from event fees.",
   },
   {
     question: "How do I verify my identity?",
