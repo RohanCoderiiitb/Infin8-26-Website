@@ -28,11 +28,20 @@ import landingPageGif from "../../assets/landing-page.gif";
 
 import CountDownTimer from "./CountDownTimer";
 import "./HomePage.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import artistimg from "../../assets/artists/bg_artist.jpg"
+import artistimg1 from "../../assets/artists/swattrex.jpg"
+import artistimg2 from "../../assets/artists/prateeksha.jpg"
+import artistimg3 from "../../assets/artists/vaani.jpg"
 
 export default function HomePage() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const aboutSectionRef = useRef(null);
+
+  const [current, setCurrent] = useState(0);
+  const nextSlide = () => setCurrent((prev) => (prev === artists.length - 1 ? 0 : prev + 1));
+  const prevSlide = () => setCurrent((prev) => (prev === 0 ? artists.length - 1 : prev - 1));
 
   const menuItems = [
     { label: "Home", path: "/" },
@@ -40,6 +49,30 @@ export default function HomePage() {
     { label: "Events", path: "/events" },
     { label: "Team", path: "/teams" },
   ];
+
+ const artists = [
+  {
+    name: "Swattrex",
+    role: "Electronic Producer & DJ",
+    desc: "Swattrex (Swatej Agrawal) is a Delhi-based musician and DJ with a massive digital footprint, including 1.5M+ YouTube subscribers and 1.1M+ monthly Spotify listeners. Since 2017, he has built a catalog of 650+ songs, surpassing 200 million audio/video streams and 1.5 billion UGC views. His work has been featured in Rolling Stone India and The Times of India. A prolific live performer, he has played at over 170 colleges and 50 clubs in the last two years alone.",
+    img: artistimg1, 
+    color: "#00c2ff"
+  },
+  {
+    name: "Prateeksha Srivastava",
+    role: "Vocalist & Composer",
+    desc: "Prateeksha Srivastava is a Mumbai-based singer and composer known for fusing Indian classical foundations with modern electronic pop. A former finalist on Zee Sa Re Ga Ma Pa Lil Champs at age 8, she has spent years refining her sound under classical training. Since moving to Mumbai in 2018, she has released a steady stream of original tracks and collaborations, performing everything from soulful ballads to high-energy festive music for diverse audiences.",
+    img: artistimg2,
+    color: "#4dd0e1"
+  },
+  {
+    name: "Vaani Bhasin",
+    role: "Singer-Songwriter & Performer",
+    desc: "Vaani Bhasin is a singer-songwriter and actor recognized as a Spotify RISE artist. Her debut single 'We Made Us' reached the cover of Spotify’s Fresh Finds, and her track 'Brave' was selected for the Top 100 in A.R. Rahman’s NEXA Music. Beyond her solo work, she performs alongside the legendary duo Colonial Cousins. She has toured extensively across India, performing at premier institutes like the IITs and IIMs while maintaining a career in national brand campaigns.",
+    img: artistimg3,
+    color: "#0072ff"
+  }
+];
 
   return (
     <div className="home-wrapper">
@@ -279,6 +312,67 @@ export default function HomePage() {
             <img src={eventgif} alt="event-gif" className="event-gif" />
           </motion.div>
         </motion.div>
+      </section>
+
+      <section className="rolling-artist-section">
+        <img src={artistimg} alt="bg" className="artist-bg"></img>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current}
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="artist-window"
+          >
+            <div className="artist-content-split">
+              {/* Left Side: Visuals */}
+              <div className="artist-visual-pane">
+                <div className="glow-circle" style={{ backgroundColor: artists[current].color }}></div>
+                <img src={artists[current].img} alt={artists[current].name} className="artist-hero-img" />
+              </div>
+
+              {/* Right Side: Description */}
+              <div className="artist-info-pane">
+                <motion.h4 
+                   initial={{ y: 20, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
+                   transition={{ delay: 0.3 }}
+                   className="artist-subtitle"
+                >
+                  {artists[current].role}
+                </motion.h4>
+                <motion.h2 
+                   className="section-title artist-main-title"
+                   initial={{ y: 20, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
+                   transition={{ delay: 0.4 }}
+                >
+                  {artists[current].name}
+                </motion.h2>
+                <motion.p 
+                   className="artist-description"
+                   initial={{ y: 20, opacity: 0 }}
+                   animate={{ y: 0, opacity: 1 }}
+                   transition={{ delay: 0.5 }}
+                >
+                  {artists[current].desc}
+                </motion.p>
+
+                {/* Navigation Buttons */}
+                <div className="artist-nav">
+                  <button onClick={prevSlide} className="nav-bubble"><ChevronLeft size={30} /></button>
+                  <div className="nav-dots">
+                    {artists.map((_, i) => (
+                      <div key={i} className={`dot ${i === current ? "active" : ""}`} onClick={() => setCurrent(i)} />
+                    ))}
+                  </div>
+                  <button onClick={nextSlide} className="nav-bubble"><ChevronRight size={30} /></button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </section>
 
       <FaqSection />
