@@ -1213,8 +1213,13 @@
     text-align: center;
   }
 
+  .artist-description{
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
   .artist-hero-img {
-    max-width: 180px;
+    max-width: 160px;
   }
   
   .rolling-artist-section {
@@ -1223,6 +1228,8 @@
   }
   .nav-bubble{
     background-color: rgba(9, 70, 239, 0.6);
+    height: 40px;
+    width: 40px;
   }
   .dot{
     background:white ;

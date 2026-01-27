@@ -7,4 +7,8 @@ export default defineConfig({
   base: "/",
   plugins: [react(), imagetools()],
   assetsInclude: ["**/*.csv"],
+  server:{
+    host:"0.0.0.0",
+    port:5173,
+  },
 });
