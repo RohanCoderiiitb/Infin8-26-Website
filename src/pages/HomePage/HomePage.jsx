@@ -33,7 +33,7 @@ import artistimg from "../../assets/artists/bg_artist.jpg"
 import artistimg1 from "../../assets/artists/swattrex.jpg"
 import artistimg2 from "../../assets/artists/prateeksha.jpg"
 import artistimg3 from "../../assets/artists/vaani.jpg"
-
+import artistimg4 from "../../assets/artists/IMG_3595.JPEG"
 export default function HomePage() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -70,6 +70,13 @@ export default function HomePage() {
     role: "Singer-Songwriter & Performer",
     desc: "Vaani Bhasin is a singer-songwriter and actor recognized as a Spotify RISE artist. Her debut single 'We Made Us' reached the cover of Spotify’s Fresh Finds, and her track 'Brave' was selected for the Top 100 in A.R. Rahman’s NEXA Music. Beyond her solo work, she performs alongside the legendary duo Colonial Cousins. She has toured extensively across India, performing at premier institutes like the IITs and IIMs while maintaining a career in national brand campaigns.",
     img: artistimg3,
+    color: "#0072ff"
+  },
+  {
+    name: "9Teen",
+    role: "Indian Boy Band",
+    desc: "The 9Teen is an Indian boy band comprising Lav Jaiswal, Abhilash Murala, and Arun O’Conner, united by a deep passion for creating heartfelt acoustic music. They strongly believe in the power of live cover performances, focusing on experiencing music rather than just listening to it. Making a remarkable entry into the music creator space in 2017, The 9Teen has since built a massive digital presence—amassing over 86M+ total views on YouTube, 1M+ monthly listeners on Spotify, and a loyal community of 1.2M followers on Instagram. With multiple audios trending on Instagram, they continue to captivate audiences through their soulful sound and mesmerizing performances.",
+    img: artistimg4,
     color: "#0072ff"
   }
 ];
